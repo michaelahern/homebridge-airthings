@@ -6,9 +6,8 @@ export class AirthingsApi {
   private accessToken?: AccessToken;
 
   private readonly client: ClientCredentials;
-  private readonly log: Logging;
 
-  constructor(log: Logging, clientId: string, clientSecret: string) {
+  constructor(clientId: string, clientSecret: string) {
     const config = {
       client: {
         id: clientId,
@@ -21,7 +20,6 @@ export class AirthingsApi {
     };
 
     this.client = new ClientCredentials(config);
-    this.log = log;
   }
 
   public async getLatestSamples(id: string) {
@@ -37,7 +35,6 @@ export class AirthingsApi {
     };
 
     const response = await axios.get<AirthingsApiDeviceSample>(`https://ext-api.airthings.com/v1/devices/${id}/latest-samples`, requestConfig);
-    this.log.debug(JSON.stringify(response.data));
     return response.data;
   }
 }

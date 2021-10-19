@@ -20,6 +20,7 @@
   "files": [
     "dist"
   ],
+  "main": "dist/plugin.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/michaelahern/homebridge-airthings.git"
