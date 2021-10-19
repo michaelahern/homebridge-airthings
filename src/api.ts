@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Logging } from "homebridge";
 import { AccessToken, ClientCredentials } from "simple-oauth2";
 
 export class AirthingsApi {
