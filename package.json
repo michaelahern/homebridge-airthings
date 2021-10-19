@@ -1,0 +1,48 @@
+{
+    "name": "homebridge-airthings",
+    "version": "0.1.0",
+    "description": "A Homebridge plugin for Airthings air quality monitors via the Airthings Consumer API.",
+    "keywords": [
+        "airthings",
+        "homebridge",
+        "homebridge-plugin"
+    ],
+    "homepage": "https://github.com/michaelahern/homebridge-airthings",
+    "bugs": {
+        "url": "http://github.com/michaelahern/homebridge-airthings/issues"
+    },
+    "license": "ISC",
+    "author": "Michael Ahern <michael.ahern@gmail.com>",
+    "funding": {
+        "type": "paypal",
+        "url": "https://paypal.me/michaeljahern"
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/michaelahern/homebridge-airthings.git"
+    },
+    "scripts": {
+        "build": "rimraf dist && tsc",
+        "clean": "rimraf dist",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "async-mutex": "^0.3.2",
+        "axios": "^0.23.0",
+        "simple-oauth2": "^4.1.1"
+    },
+    "devDependencies": {
+        "@types/node": "^16.11.1",
+        "@types/simple-oauth2": "^4.1.1",
+        "homebridge": "^1.3.5",
+        "rimraf": "^3.0.2",
+        "typescript": "^4.4.4"
+    },
+    "engines": {
+        "homebridge": ">=1.3.0",
+        "node": ">=14"
+    }
+}
