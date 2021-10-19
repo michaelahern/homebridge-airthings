@@ -1,19 +1,19 @@
 {
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "display": "Node 14",
-    "compilerOptions": {
-        "lib": [
-            "es2020"
-        ],
-        "module": "commonjs",
-        "target": "es2020",
-        "outDir": "dist",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
-    },
-    "include": [
-        "src/"
-    ]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 14",
+  "compilerOptions": {
+    "lib": [
+      "es2020"
+    ],
+    "module": "commonjs",
+    "target": "es2020",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/"
+  ]
 }
