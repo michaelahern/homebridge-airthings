@@ -105,6 +105,19 @@ class AirthingsPlugin implements AccessoryPlugin {
           }
         }
 
+        const radonShortTermAvg = this.latestSamples.data.radonShortTermAvg;
+        if (radonShortTermAvg) {
+          if (radonShortTermAvg >= 150) {
+            aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
+          }
+          else if (radonShortTermAvg >= 100) {
+            aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
+          }
+          else {
+            aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
+          }
+        }
+
         const voc = this.latestSamples.data.voc;
         if (voc) {
           if (voc >= 2000) {
@@ -127,6 +140,22 @@ class AirthingsPlugin implements AccessoryPlugin {
           await this.getLatestSamples();
           return this.latestSamples.data.pm25 ?? 0;
         });
+    }
+
+    if (this.airthingsDevice.sensors.radonShortTermAvg) {
+      const radonShortTermCharacteristic = new api.hap.Characteristic('Radon (24h avg)', "b42e01aa-ade7-11e4-89d3-123b93f75cba", {
+        format: api.hap.Formats.UINT16,
+        perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
+        unit: "Bq/m3",
+        minValue: 0,
+        maxValue: 16383,
+        minStep: 1,
+      }).onGet(async () => {
+        await this.getLatestSamples();
+        return this.latestSamples.data.radonShortTermAvg ?? 0;
+      });
+
+      this.airQualityService.addCharacteristic(radonShortTermCharacteristic);
     }
 
     if (this.airthingsDevice.sensors.voc) {
