@@ -153,6 +153,12 @@ class AirthingsPlugin implements AccessoryPlugin {
           : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
       });
 
+    this.airQualityService.getCharacteristic(api.hap.Characteristic.BatteryLevel)
+      .onGet(async () => {
+        await this.getLatestSamples();
+        return this.latestSamples.data.battery ?? 100;
+      });
+
     // HomeKit Temperature Service
     this.temperatureService = new api.hap.Service.TemperatureSensor("Temp");
 
@@ -168,14 +174,6 @@ class AirthingsPlugin implements AccessoryPlugin {
         return this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
       });
 
-    this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusLowBattery)
-      .onGet(async () => {
-        await this.getLatestSamples();
-        return this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
-          ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-          : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
-      });
-
     // HomeKit Humidity Service
     this.humidityService = new api.hap.Service.HumiditySensor("Humidity");
 
@@ -189,14 +187,6 @@ class AirthingsPlugin implements AccessoryPlugin {
       .onGet(async () => {
         await this.getLatestSamples();
         return this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
-      });
-
-    this.humidityService.getCharacteristic(api.hap.Characteristic.StatusLowBattery)
-      .onGet(async () => {
-        await this.getLatestSamples();
-        return this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
-          ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-          : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
       });
 
     // HomeKit CO2 Service
@@ -220,14 +210,6 @@ class AirthingsPlugin implements AccessoryPlugin {
       .onGet(async () => {
         await this.getLatestSamples();
         return this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
-      });
-
-    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusLowBattery)
-      .onGet(async () => {
-        await this.getLatestSamples();
-        return this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
-          ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-          : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
       });
   }
 
