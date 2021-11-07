@@ -1,4 +1,4 @@
-# homebridge-airthings
+# Homebridge Airthings
 
 [![npm](https://badgen.net/npm/v/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
 [![npm](https://badgen.net/npm/dt/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
@@ -6,21 +6,28 @@
 [![Build](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml/badge.svg)](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml)
 [![Donate](https://badgen.net/badge/Donate/PayPal/green)](https://paypal.me/michaeljahern)
 
-
 A [Homebridge](https://homebridge.io) plugin for
 [Airthings](https://www.airthings.com) air quality monitors via the 
 [Airthings Consumer API](https://developer.airthings.com/consumer-api-docs/).
 
-## Supported Devices
+## Requirements
 
- * [Airthings View Plus](https://www.airthings.com/view-plus)
- * [Airthings Wave Plus](https://www.airthings.com/wave-plus)
- * [Airthings Wave Radon](https://www.airthings.com/wave-radon)
- * [Airthings Wave Mini](https://www.airthings.com/wave-mini)
+ * [Homebridge](https://homebridge.io/)
+ * One or more supported [Airthings](https://www.airthings.com/) air quality monitors
+ * At least one Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus))
 
-Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus)) to continuously push measurement data to the Airthings cloud.
+### Supported Devices
 
-## Homebridge Configuration
+| Airthings Device                                             | Serial Number |
+| ------------------------------------------------------------ | ------------- |
+| [Airthings View Plus](https://www.airthings.com/view-plus)   | 296xxxxxxx    |
+| [Airthings Wave Plus](https://www.airthings.com/wave-plus)   | 293xxxxxxx    |
+| [Airthings Wave Radon](https://www.airthings.com/wave-radon) | 295xxxxxxx    |
+| [Airthings Wave Mini](https://www.airthings.com/wave-mini)   | 292xxxxxxx    |
+
+Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus)) to continuously push measurement data to the Airthings Cloud.
+
+## Configuration
 
 Example accessory config in the Homebridge config.json:
 
@@ -45,3 +52,14 @@ Field           	| Description
 **clientId**			| (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	| (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	| (required) Serial number of the device
+
+### How to request an Airthings API Client ID & Secret
+
+1. Login to the [Airthings Dashboard](https://dashboard.airthings.com)
+2. Navigate to *Integrations*, then *Request API Client*
+3. Create a new API Client with the following configuration:
+    * Name: Homebridge
+    * Resource Scope: read:device:current_values
+    * Access Type: confidential
+    * Flow Type: Client Credentials (machine-to-machine)
+    * Enable: On
