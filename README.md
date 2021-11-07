@@ -18,7 +18,7 @@ A [Homebridge](https://homebridge.io) plugin for
  * [Airthings Wave Radon](https://www.airthings.com/wave-radon)
  * [Airthings Wave Mini](https://www.airthings.com/wave-mini)
 
-Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](hhttps://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus)) to continuously push measurement data to the Airthings cloud.
+Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus)) to continuously push measurement data to the Airthings cloud.
 
 ## Homebridge Configuration
 
