@@ -1,0 +1,31 @@
+{
+  "pluginAlias": "Airthings",
+  "pluginType": "accessory",
+  "footerDisplay": "Generating a Client ID & Secret: [Airthings Dashboard](https://dashboard.airthings.com) -> Integrations -> Request API Client",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "required": true,
+        "default": "Airthings Device"
+      },
+      "clientId": {
+        "title": "Client ID",
+        "type": "string",
+        "required": true
+      },
+      "clientSecret": {
+        "title": "Client Secret",
+        "type": "string",
+        "required": true
+      },
+      "serialNumber": {
+        "title": "Serial Number",
+        "type": "string",
+        "required": true
+      }
+    }
+  }
+}
