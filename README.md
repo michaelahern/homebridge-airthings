@@ -2,13 +2,23 @@
 
 [![npm](https://badgen.net/npm/v/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
 [![npm](https://badgen.net/npm/dt/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
+[![License](https://badgen.net/github/license/michaelahern/homebridge-airthings)](LICENSE)
+[![Build](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml/badge.svg)](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml)
 [![Donate](https://badgen.net/badge/Donate/PayPal/green)](https://paypal.me/michaeljahern)
+
 
 A [Homebridge](https://homebridge.io) plugin for
 [Airthings](https://www.airthings.com) air quality monitors via the 
 [Airthings Consumer API](https://developer.airthings.com/consumer-api-docs/).
 
-This plugin has been tested with an [Airthings View Plus](https://www.airthings.com/view-plus) acting as a SmartLink Hub with an [Airthings Wave Mini](https://www.airthings.com/wave-mini). It may work with other devices supporting Airthings SmartLink, such as an [Airthings Wave Plus](https://www.airthings.com/wave-plus-archived), with an [Airthings Hub](https://www.airthings.com/hub), but these have not yet been tested. Feedback and testing welcome!
+## Supported Devices
+
+ * [Airthings View Plus](https://www.airthings.com/view-plus)
+ * [Airthings Wave Plus](https://www.airthings.com/wave-plus)
+ * [Airthings Wave Radon](https://www.airthings.com/wave-radon)
+ * [Airthings Wave Mini](https://www.airthings.com/wave-mini)
+
+Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](hhttps://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus)) to continuously push measurement data to the Airthings cloud.
 
 ## Homebridge Configuration
 
