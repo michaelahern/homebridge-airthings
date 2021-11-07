@@ -20,6 +20,7 @@ class AirthingsPlugin implements AccessoryPlugin {
   private readonly temperatureService: Service;
   private readonly humidityService: Service;
   private readonly carbonDioxideService: Service;
+  private readonly airPressureService: Service;
 
   private latestSamples: AirthingsApiDeviceSample = {
     data: {}
@@ -200,7 +201,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive)
       .onGet(async () => {
         await this.getLatestSamples();
-        return this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
+        return this.latestSamples.data.temp != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
       });
 
     // HomeKit Humidity Service
@@ -215,7 +216,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     this.humidityService.getCharacteristic(api.hap.Characteristic.StatusActive)
       .onGet(async () => {
         await this.getLatestSamples();
-        return this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
+        return this.latestSamples.data.humidity != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
       });
 
     // HomeKit CO2 Service
@@ -238,7 +239,28 @@ class AirthingsPlugin implements AccessoryPlugin {
     this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusActive)
       .onGet(async () => {
         await this.getLatestSamples();
-        return this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
+        return this.latestSamples.data.co2 != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
+      });
+
+    // Eve Air Pressure Service
+    this.airPressureService = new api.hap.Service("Air Pressure", "e863f00a-079e-48ff-8f27-9c2605a29f52");
+
+    this.airPressureService.addCharacteristic(new api.hap.Characteristic("Air Pressure", "e863f10f-079e-48ff-8f27-9c2605a29f52", {
+      format: api.hap.Formats.UINT16,
+      perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
+      unit: "mBar",
+      minValue: 850,
+      maxValue: 1100,
+      minStep: 1,
+    }).onGet(async () => {
+      await this.getLatestSamples();
+      return this.latestSamples.data.pressure ?? 1012;
+    }));
+
+    this.airPressureService.getCharacteristic(api.hap.Characteristic.StatusActive)
+      .onGet(async () => {
+        await this.getLatestSamples();
+        return this.latestSamples.data.pressure != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
       });
   }
 
@@ -255,6 +277,10 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     if (this.airthingsDevice.sensors.co2) {
       services.push(this.carbonDioxideService);
+    }
+
+    if (this.airthingsDevice.sensors.pressure) {
+      services.push(this.airPressureService);
     }
 
     return services;
