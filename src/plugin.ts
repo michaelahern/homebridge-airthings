@@ -29,15 +29,16 @@ class AirthingsPlugin implements AccessoryPlugin {
 
   constructor(log: Logging, config: AirthingsPluginConfig, api: API) {
     if (config.clientId == null) {
-      throw new Error("Missing config value: clientId");
+      log.error("Missing required config value: clientId");
     }
 
     if (config.clientSecret == null) {
-      throw new Error("Missing config value: clientSecret");
+      log.error("Missing required config value: clientSecret");
     }
 
     if (config.serialNumber == null) {
-      throw new Error("Missing config value: serialNumber");
+      log.error("Missing required config value: serialNumber");
+      config.serialNumber = "0000000000";
     }
 
     this.log = log;
