@@ -21,6 +21,7 @@ class AirthingsPlugin implements AccessoryPlugin {
   private readonly humidityService: Service;
   private readonly carbonDioxideService: Service;
   private readonly airPressureService: Service;
+  private readonly batteryService: Service;
 
   private latestSamples: AirthingsApiDeviceSample = {
     data: {}
@@ -176,20 +177,6 @@ class AirthingsPlugin implements AccessoryPlugin {
         return this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
       });
 
-    this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusLowBattery)
-      .onGet(async () => {
-        await this.getLatestSamples();
-        return this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
-          ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-          : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
-      });
-
-    this.airQualityService.getCharacteristic(api.hap.Characteristic.BatteryLevel)
-      .onGet(async () => {
-        await this.getLatestSamples();
-        return this.latestSamples.data.battery ?? 100;
-      });
-
     // HomeKit Temperature Service
     this.temperatureService = new api.hap.Service.TemperatureSensor("Temp");
 
@@ -263,10 +250,23 @@ class AirthingsPlugin implements AccessoryPlugin {
         await this.getLatestSamples();
         return this.latestSamples.data.pressure != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
       });
+
+    //HomeKit BatteryService
+    this.batteryService = new api.hap.Service.Battery("Battery");
+    this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).onGet(async () => {
+      await this.getLatestSamples();
+      return this.latestSamples.data.battery ?? 100;
+    });
+    this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).onGet(async () => {
+      await this.getLatestSamples();
+      return this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
+        ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
+        : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
+    });
   }
 
   getServices(): Service[] {
-    const services = [this.informationService, this.airQualityService];
+    const services = [this.informationService, this.airQualityService, this.batteryService];
 
     if (this.airthingsDevice.sensors.temp) {
       services.push(this.temperatureService);
