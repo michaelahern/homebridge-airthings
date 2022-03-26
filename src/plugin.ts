@@ -149,7 +149,7 @@ class AirthingsPlugin implements AccessoryPlugin {
       const radonShortTermCharacteristic = new api.hap.Characteristic('Radon (24h avg)', "b42e01aa-ade7-11e4-89d3-123b93f75cba", {
         format: api.hap.Formats.UINT16,
         perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
-        unit: "Bq/m3",
+        unit: "Bq/m³",
         minValue: 0,
         maxValue: 16383,
         minStep: 1,
@@ -162,13 +162,21 @@ class AirthingsPlugin implements AccessoryPlugin {
     }
 
     if (this.airthingsDevice.sensors.voc) {
-      this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)
-        .onGet(async () => {
-          await this.getLatestSamples();
-          const temp = this.latestSamples.data.temp ?? 25;
-          const pressure = this.latestSamples.data.pressure ?? 1013;
-          return this.latestSamples.data.voc != null ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0;
-        });
+      const VOCDensityCharacteristic = new api.hap.Characteristic('VOC Density', "000000C8-0000-1000-8000-0026BB765291", {
+        format: api.hap.Formats.FLOAT,
+        perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
+        unit: "µg/m³",
+        minValue: 0,
+        maxValue: 65535,
+        minStep: 1,
+      }).onGet(async() => {
+        await this.getLatestSamples();
+        const temp = this.latestSamples.data.temp ?? 25;
+        const pressure = this.latestSamples.data.pressure ?? 1013;
+        return this.latestSamples.data.voc != null ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0;
+      });
+
+      this.airQualityService.addCharacteristic(VOCDensityCharacteristic);
     }
 
     this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusActive)
