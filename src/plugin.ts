@@ -16,12 +16,12 @@ class AirthingsPlugin implements AccessoryPlugin {
   private readonly airthingsDevice: AirthingsDeviceInfo;
 
   private readonly informationService: Service;
+  private readonly batteryService: Service;
   private readonly airQualityService: Service;
   private readonly temperatureService: Service;
   private readonly humidityService: Service;
   private readonly carbonDioxideService: Service;
   private readonly airPressureService: Service;
-  private readonly batteryService: Service;
 
   private latestSamples: AirthingsApiDeviceSample = {
     data: {}
@@ -59,6 +59,23 @@ class AirthingsPlugin implements AccessoryPlugin {
       .setCharacteristic(api.hap.Characteristic.Name, config.name)
       .setCharacteristic(api.hap.Characteristic.SerialNumber, config.serialNumber)
       .setCharacteristic(api.hap.Characteristic.FirmwareRevision, "Unknown");
+
+    // HomeKit Battery Service
+    this.batteryService = new api.hap.Service.Battery("Battery");
+
+    this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel)
+      .onGet(async () => {
+        await this.getLatestSamples();
+        return this.latestSamples.data.battery ?? 100;
+      });
+
+    this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery)
+      .onGet(async () => {
+        await this.getLatestSamples();
+        return this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
+          ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
+          : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
+      });
 
     // HomeKit Air Quality Service
     this.airQualityService = new api.hap.Service.AirQualitySensor("Air Quality");
@@ -146,7 +163,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     }
 
     if (this.airthingsDevice.sensors.radonShortTermAvg) {
-      const radonShortTermCharacteristic = new api.hap.Characteristic('Radon (24h avg)', "b42e01aa-ade7-11e4-89d3-123b93f75cba", {
+      const radonShortTermCharacteristic = new api.hap.Characteristic("Radon (24h avg)", "B42E01AA-ADE7-11E4-89D3-123B93F75CBA", {
         format: api.hap.Formats.UINT16,
         perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
         unit: "Bq/m³",
@@ -162,14 +179,14 @@ class AirthingsPlugin implements AccessoryPlugin {
     }
 
     if (this.airthingsDevice.sensors.voc) {
-      const VOCDensityCharacteristic = new api.hap.Characteristic('VOC Density', "000000C8-0000-1000-8000-0026BB765291", {
+      const VOCDensityCharacteristic = new api.hap.Characteristic("VOC Density", "000000C8-0000-1000-8000-0026BB765291", {
         format: api.hap.Formats.FLOAT,
         perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
         unit: "µg/m³",
         minValue: 0,
         maxValue: 65535,
         minStep: 1,
-      }).onGet(async() => {
+      }).onGet(async () => {
         await this.getLatestSamples();
         const temp = this.latestSamples.data.temp ?? 25;
         const pressure = this.latestSamples.data.pressure ?? 1013;
@@ -258,23 +275,10 @@ class AirthingsPlugin implements AccessoryPlugin {
         await this.getLatestSamples();
         return this.latestSamples.data.pressure != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60;
       });
-
-    //HomeKit BatteryService
-    this.batteryService = new api.hap.Service.Battery("Battery");
-    this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).onGet(async () => {
-      await this.getLatestSamples();
-      return this.latestSamples.data.battery ?? 100;
-    });
-    this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).onGet(async () => {
-      await this.getLatestSamples();
-      return this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
-        ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-        : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW;
-    });
   }
 
   getServices(): Service[] {
-    const services = [this.informationService, this.airQualityService, this.batteryService];
+    const services = [this.informationService, this.batteryService, this.airQualityService];
 
     if (this.airthingsDevice.sensors.temp) {
       services.push(this.temperatureService);
@@ -302,7 +306,7 @@ class AirthingsPlugin implements AccessoryPlugin {
       }
 
       if (Date.now() - this.latestSamplesTimestamp > 300 * 1000) {
-        this.log.info(`Refreshing latest samples...`)
+        this.log.info("Refreshing latest samples...");
 
         try {
           this.latestSamples = await this.airthingsApi.getLatestSamples(this.airthingsConfig.serialNumber);
