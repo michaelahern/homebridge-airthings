@@ -21,6 +21,7 @@ export class AirthingsDevice {
     sensors: {
       co2: true,
       humidity: true,
+      mold: false,
       pm1: true,
       pm25: true,
       pressure: true,
@@ -35,6 +36,7 @@ export class AirthingsDevice {
     sensors: {
       co2: false,
       humidity: true,
+      mold: false,
       pm1: false,
       pm25: false,
       pressure: false,
@@ -49,6 +51,7 @@ export class AirthingsDevice {
     sensors: {
       co2: false,
       humidity: true,
+      mold: true,
       pm1: false,
       pm25: false,
       pressure: false,
@@ -63,6 +66,7 @@ export class AirthingsDevice {
     sensors: {
       co2: true,
       humidity: true,
+      mold: false,
       pm1: false,
       pm25: false,
       pressure: true,
@@ -77,6 +81,7 @@ export class AirthingsDevice {
     sensors: {
       co2: false,
       humidity: true,
+      mold: false,
       pm1: false,
       pm25: false,
       pressure: false,
@@ -91,6 +96,7 @@ export class AirthingsDevice {
     sensors: {
       co2: false,
       humidity: false,
+      mold: false,
       pm1: false,
       pm25: false,
       pressure: false,
@@ -106,6 +112,7 @@ export interface AirthingsDeviceInfo {
   sensors: {
     co2: boolean;
     humidity: boolean;
+    mold: boolean;
     pm1: boolean;
     pm25: boolean;
     pressure: boolean;

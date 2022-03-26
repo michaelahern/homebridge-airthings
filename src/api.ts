@@ -51,6 +51,7 @@ export interface AirthingsApiDeviceSample {
     battery?: number;
     co2?: number;
     humidity?: number;
+    mold?: number;
     pm1?: number;
     pm25?: number;
     pressure?: number;

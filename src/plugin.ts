@@ -87,7 +87,7 @@ class AirthingsPlugin implements AccessoryPlugin {
         let aq = api.hap.Characteristic.AirQuality.UNKNOWN;
 
         const humidity = this.latestSamples.data.humidity;
-        if (humidity) {
+        if (humidity != undefined) {
           if (humidity < 25 || humidity >= 70) {
             aq = api.hap.Characteristic.AirQuality.POOR;
           }
@@ -100,7 +100,7 @@ class AirthingsPlugin implements AccessoryPlugin {
         }
 
         const co2 = this.latestSamples.data.co2;
-        if (co2) {
+        if (co2 != undefined) {
           if (co2 >= 1000) {
             aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
           }
@@ -112,8 +112,21 @@ class AirthingsPlugin implements AccessoryPlugin {
           }
         }
 
+        const mold = this.latestSamples.data.mold;
+        if (mold != undefined) {
+          if (mold >= 5) {
+            aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
+          }
+          else if (mold >= 3) {
+            aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
+          }
+          else {
+            aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
+          }
+        }
+
         const pm25 = this.latestSamples.data.pm25;
-        if (pm25) {
+        if (pm25 != undefined) {
           if (pm25 >= 25) {
             aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
           }
@@ -126,7 +139,7 @@ class AirthingsPlugin implements AccessoryPlugin {
         }
 
         const radonShortTermAvg = this.latestSamples.data.radonShortTermAvg;
-        if (radonShortTermAvg) {
+        if (radonShortTermAvg != undefined) {
           if (radonShortTermAvg >= 150) {
             aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
           }
@@ -139,7 +152,7 @@ class AirthingsPlugin implements AccessoryPlugin {
         }
 
         const voc = this.latestSamples.data.voc;
-        if (voc) {
+        if (voc != undefined) {
           if (voc >= 2000) {
             aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
           }
@@ -153,6 +166,22 @@ class AirthingsPlugin implements AccessoryPlugin {
 
         return aq;
       });
+    
+    if (this.airthingsDevice.sensors.mold) {
+      const moldCharacteristic = new api.hap.Characteristic("Mold", "68F9B9E6-88C7-4FB3-B8CE-60205F9F280E", {
+        format: api.hap.Formats.UINT16,
+        perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
+        unit: "",
+        minValue: 0,
+        maxValue: 10,
+        minStep: 1,
+      }).onGet(async () => {
+        await this.getLatestSamples();
+        return this.latestSamples.data.mold ?? 0;
+      });
+  
+      this.airQualityService.addCharacteristic(moldCharacteristic);
+    }
 
     if (this.airthingsDevice.sensors.pm25) {
       this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density)
