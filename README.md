@@ -15,18 +15,20 @@ A [Homebridge](https://homebridge.io) plugin for
 
  * [Homebridge](https://homebridge.io/)
  * One or more supported [Airthings](https://www.airthings.com/) air quality monitors
- * At least one Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus))
+ * At least one Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub), [View Plus](https://www.airthings.com/view-plus), [View Pollution](https://www.airthings.com/view-pollution), [View Radon](https://www.airthings.com/view-radon))
 
 ### Supported Devices
 
-| Airthings Device                                             | Serial Number |
-| ------------------------------------------------------------ | ------------- |
-| [Airthings View Plus](https://www.airthings.com/view-plus)   | 296xxxxxxx    |
-| [Airthings Wave Plus](https://www.airthings.com/wave-plus)   | 293xxxxxxx    |
-| [Airthings Wave Radon](https://www.airthings.com/wave-radon) | 295xxxxxxx    |
-| [Airthings Wave Mini](https://www.airthings.com/wave-mini)   | 292xxxxxxx    |
+| Airthings Device                                                     | Serial Number |
+| -------------------------------------------------------------------- | ------------- |
+| [Airthings View Plus](https://www.airthings.com/view-plus)           | 2960xxxxxx    |
+| [Airthings View Pollution](https://www.airthings.com/view-pollution) | 2980xxxxxx    |
+| [Airthings View Radon](https://www.airthings.com/view-radon)         | 2989xxxxxx    |
+| [Airthings Wave Plus](https://www.airthings.com/wave-plus)           | 2930xxxxxx    |
+| [Airthings Wave Radon](https://www.airthings.com/wave-radon)         | 2950xxxxxx    |
+| [Airthings Wave Mini](https://www.airthings.com/wave-mini)           | 2920xxxxxx    |
 
-Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Plus](https://www.airthings.com/view-plus)) to continuously push measurement data to the Airthings Cloud.
+Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Series](https://www.airthings.com/for-home) device) to continuously push measurement data to the Airthings Cloud.
 
 ## Configuration
 
@@ -39,7 +41,7 @@ Example accessory config in the Homebridge config.json:
     "name": "Living Room Airthings View Plus",
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
-    "serialNumber": "2961234567"
+    "serialNumber": "2960123456"
   }
 ]
 ```

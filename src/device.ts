@@ -1,16 +1,20 @@
 export class AirthingsDevice {
   public static getDevice(serialNumber: string) {
-    switch (serialNumber.substring(0, 3)) {
-      case "290":
+    switch (serialNumber.substring(0, 4)) {
+      case "2900":
         return AirthingsDevice.WAVE;
-      case "292":
+      case "2920":
         return AirthingsDevice.WAVE_MINI;
-      case "293":
+      case "2930":
         return AirthingsDevice.WAVE_PLUS;
-      case "295":
+      case "2950":
         return AirthingsDevice.WAVE_RADON;
-      case "296":
+      case "2960":
         return AirthingsDevice.VIEW_PLUS;
+      case "2980":
+        return AirthingsDevice.VIEW_POLLUTION;
+      case "2989":
+        return AirthingsDevice.VIEW_RADON;
       default:
         return AirthingsDevice.UNKNOWN;
     }
@@ -28,6 +32,36 @@ export class AirthingsDevice {
       radonShortTermAvg: true,
       temp: true,
       voc: true
+    }
+  };
+
+  static readonly VIEW_POLLUTION: AirthingsDeviceInfo = {
+    model: "View Pollution",
+    sensors: {
+      co2: false,
+      humidity: true,
+      mold: false,
+      pm1: true,
+      pm25: true,
+      pressure: false,
+      radonShortTermAvg: false,
+      temp: true,
+      voc: false
+    }
+  };
+
+  static readonly VIEW_RADON: AirthingsDeviceInfo = {
+    model: "View Radon",
+    sensors: {
+      co2: false,
+      humidity: true,
+      mold: false,
+      pm1: false,
+      pm25: false,
+      pressure: false,
+      radonShortTermAvg: true,
+      temp: true,
+      voc: false
     }
   };
 
