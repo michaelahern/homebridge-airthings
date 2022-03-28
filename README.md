@@ -41,20 +41,22 @@ Example accessory config in the Homebridge config.json:
     "name": "Living Room Airthings View Plus",
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
-    "serialNumber": "2960123456"
+    "serialNumber": "2960123456",
+    "refreshInterval": 300
   }
 ]
 ```
 
 ### Configuration Details
 
-Field           	| Description
-------------------|------------
-**accessory**   	| (required) Must be "Airthings"
-**name**					| (required) Name for the device in HomeKit
-**clientId**			| (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
-**clientSecret**	| (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
-**serialNumber**	| (required) Serial number of the device
+Field           	  | Description
+--------------------|------------
+**accessory**   	  | (required) Must be "Airthings"
+**name**					  | (required) Name for the device in HomeKit
+**clientId**			  | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
+**clientSecret**	  | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
+**serialNumber**	  | (required) Serial number of the device
+**refreshInterval**	| (required) Refresh interval for grabbing new data in seconds
 
 ### How to request an Airthings API Client ID & Secret
 
