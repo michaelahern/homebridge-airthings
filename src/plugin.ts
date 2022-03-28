@@ -26,8 +26,7 @@ class AirthingsPlugin implements AccessoryPlugin {
   private latestSamples: AirthingsApiDeviceSample = {
     data: {}
   };
-  private latestSamplesTimestamp: number = 0;
-  private refresher: any;
+  private refresher: NodeJS.Timer;
 
   constructor(log: Logging, config: AirthingsPluginConfig, api: API) {
     if (config.clientId == null) {
@@ -60,6 +59,7 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     this.log.info(`Device Model: ${this.airthingsDevice.model}`);
     this.log.info(`Serial Number: ${config.serialNumber}`);
+    this.log.info(`Refresh Interval: ${config.refreshInterval}`)
 
     // HomeKit Information Service
     this.informationService = new api.hap.Service.AccessoryInformation()
@@ -135,7 +135,7 @@ class AirthingsPlugin implements AccessoryPlugin {
       minStep: 1,
     }).updateValue(this.latestSamples.data.pressure ?? 1012));
 
-    //refresh values immediately
+    //refresh values immediately when initialized
     this.refreshCharacteristics(api);
     
     this.refresher = setInterval(async() => {await this.refreshCharacteristics(api)}, config.refreshInterval * 1000)
@@ -172,7 +172,6 @@ class AirthingsPlugin implements AccessoryPlugin {
 
       try {
         this.latestSamples = await this.airthingsApi.getLatestSamples(this.airthingsConfig.serialNumber);
-        this.latestSamplesTimestamp = Date.now();
         this.log.info(JSON.stringify(this.latestSamples.data));
       }
       catch (err) {
@@ -187,8 +186,8 @@ class AirthingsPlugin implements AccessoryPlugin {
     await this.getLatestSamples();
     this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).updateValue(this.latestSamples.data.battery ?? 100)
     this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).updateValue(this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
-                                                                                                  ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-                                                                                                  : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW)
+                                                                                                ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
+                                                                                                : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW)
     
     this.airQualityService.getCharacteristic(api.hap.Characteristic.AirQuality).updateValue(this.getAirQuality(api, this.latestSamples))
     
@@ -205,25 +204,39 @@ class AirthingsPlugin implements AccessoryPlugin {
     if (this.airthingsDevice.sensors.voc) {
       const temp = this.latestSamples.data.temp ?? 25;
       const pressure = this.latestSamples.data.pressure ?? 1013;
-      this.airQualityService.getCharacteristic("VOC Density")!.updateValue(this.latestSamples.data.voc != null ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0);
+      this.airQualityService.getCharacteristic("VOC Density")!.updateValue(
+        this.latestSamples.data.voc != null ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0
+      );
     }
-    this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
+    this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+      this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+    );
 
     this.temperatureService.getCharacteristic(api.hap.Characteristic.CurrentTemperature).updateValue(this.latestSamples.data.temp ?? null);
-    this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(this.latestSamples.data.temp != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
+    this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+      this.latestSamples.data.temp != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+    );
     
     this.humidityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).updateValue(this.latestSamples.data.humidity ?? 0);
-    this.humidityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(this.latestSamples.data.humidity != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
+    this.humidityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+      this.latestSamples.data.humidity != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+    );
 
-    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideDetected).updateValue(this.latestSamples.data.co2 == null || this.latestSamples.data.co2 < 1000
-                                                                                                          ? api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
-                                                                                                          : api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL);
+    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideDetected).updateValue(
+      this.latestSamples.data.co2 == null || this.latestSamples.data.co2 < 1000
+      ? api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
+      : api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
+    );
     this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).updateValue(this.latestSamples.data.co2 ?? 0);
-    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(this.latestSamples.data.co2 != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
+    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+      this.latestSamples.data.co2 != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+    );
     
     this.airPressureService.getCharacteristic("Air Pressure")!.updateValue(this.latestSamples.data.pressure ?? 1012);
 
-    this.airPressureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(this.latestSamples.data.pressure != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
+    this.airPressureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+      this.latestSamples.data.pressure != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+    );
 
   }
 
