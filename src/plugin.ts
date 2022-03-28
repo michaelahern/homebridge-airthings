@@ -102,9 +102,8 @@ class AirthingsPlugin implements AccessoryPlugin {
           minValue: 0,
           maxValue: 10,
           minStep: 1,
-        })
+        }).updateValue(this.latestSamples.data.mold ?? 0);
         this.airQualityService.addCharacteristic(moldCharacteristic);
-        this.airQualityService.getCharacteristic(moldCharacteristic).updateValue(this.latestSamples.data.mold ?? 0);
       }
       if (this.airthingsDevice.sensors.pm25) {
         this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density).updateValue(this.latestSamples.data.pm25 ?? 0)
@@ -117,11 +116,12 @@ class AirthingsPlugin implements AccessoryPlugin {
           minValue: 0,
           maxValue: 16383,
           minStep: 1,
-        })
+        }).updateValue(this.latestSamples.data.radonShortTermAvg ?? 0);
         this.airQualityService.addCharacteristic(radonShortTermCharacteristic);
-        this.airQualityService.getCharacteristic(radonShortTermCharacteristic).updateValue(this.latestSamples.data.radonShortTermAvg ?? 0);
       }
       if (this.airthingsDevice.sensors.voc) {
+        const temp = this.latestSamples.data.temp ?? 25;
+        const pressure = this.latestSamples.data.pressure ?? 1013;
         const VOCDensityCharacteristic = new api.hap.Characteristic("VOC Density", "000000C8-0000-1000-8000-0026BB765291", {
           format: api.hap.Formats.FLOAT,
           perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
@@ -129,13 +129,8 @@ class AirthingsPlugin implements AccessoryPlugin {
           minValue: 0,
           maxValue: 65535,
           minStep: 1,
-        })  
+        }).updateValue(this.latestSamples.data.voc != null ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0);
         this.airQualityService.addCharacteristic(VOCDensityCharacteristic);
-        this.airQualityService.getCharacteristic(VOCDensityCharacteristic).updateValue(function(this: any) {
-          const temp = this.latestSamples.data.temp ?? 25;
-          const pressure = this.latestSamples.data.pressure ?? 1013;
-          return this.latestSamples.data.voc != null ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0;
-        })
       }
       this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
 
