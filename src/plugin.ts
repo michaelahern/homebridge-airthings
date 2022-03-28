@@ -42,6 +42,14 @@ class AirthingsPlugin implements AccessoryPlugin {
       log.error("Missing required config value: serialNumber");
       config.serialNumber = "0000000000";
     }
+    if (config.refreshInterval == null) {
+      log.error("Missing required config value: refreshInterval, defaulting to 5 minutes");
+      config.refreshInterval = 300;
+    }
+    if (config.refreshInterval < 60) {
+      log.warn("Refresh lower than 1 minute might cause rate-limiting, setting value to 1 minute...")
+      config.refreshInterval = 60;
+    }
 
     this.log = log;
     this.mutex = new Mutex();
@@ -290,8 +298,8 @@ class AirthingsPlugin implements AccessoryPlugin {
 }
 
 interface AirthingsPluginConfig extends AccessoryConfig {
-  refreshInterval: number;
   clientId?: string;
   clientSecret?: string;
   serialNumber?: string;
+  refreshInterval?: number;
 }
