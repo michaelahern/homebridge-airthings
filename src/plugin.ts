@@ -168,19 +168,16 @@ class AirthingsPlugin implements AccessoryPlugin {
       if (this.airthingsConfig.serialNumber == null) {
         return;
       }
+      this.log.info("Refreshing latest samples...");
 
-      if (Date.now() - this.latestSamplesTimestamp > 300 * 1000) {
-        this.log.info("Refreshing latest samples...");
-
-        try {
-          this.latestSamples = await this.airthingsApi.getLatestSamples(this.airthingsConfig.serialNumber);
-          this.latestSamplesTimestamp = Date.now();
-          this.log.info(JSON.stringify(this.latestSamples.data));
-        }
-        catch (err) {
-          if (err instanceof Error) {
-            this.log.error(err.message);
-          }
+      try {
+        this.latestSamples = await this.airthingsApi.getLatestSamples(this.airthingsConfig.serialNumber);
+        this.latestSamplesTimestamp = Date.now();
+        this.log.info(JSON.stringify(this.latestSamples.data));
+      }
+      catch (err) {
+        if (err instanceof Error) {
+          this.log.error(err.message);
         }
       }
     });
