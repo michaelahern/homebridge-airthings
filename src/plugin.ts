@@ -87,14 +87,14 @@ class AirthingsPlugin implements AccessoryPlugin {
     // Eve Air Pressure Service
     this.airPressureService = new api.hap.Service("Air Pressure", "e863f00a-079e-48ff-8f27-9c2605a29f52");
     
-    this.refresher = setInterval(async function(this: any) {
+    this.refresher = setInterval(async () => {
       await this.getLatestSamples();
       this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).updateValue(this.latestSamples.data.battery ?? 100)
       this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).updateValue(this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
                                                                                                     ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
                                                                                                     : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW)
       this.airQualityService.getCharacteristic(api.hap.Characteristic.AirQuality).updateValue(this.getAirQuality(api, this.latestSamples))
-      if (this.AirthingsDevice.sensors.mold) {
+      if (this.airthingsDevice.sensors.mold) {
         const moldCharacteristic = new api.hap.Characteristic("Mold", "68F9B9E6-88C7-4FB3-B8CE-60205F9F280E", {
           format: api.hap.Formats.UINT16,
           perms: [api.hap.Perms.NOTIFY, api.hap.Perms.PAIRED_READ],
@@ -106,7 +106,7 @@ class AirthingsPlugin implements AccessoryPlugin {
         this.airQualityService.addCharacteristic(moldCharacteristic);
         this.airQualityService.getCharacteristic(moldCharacteristic).updateValue(this.latestSamples.data.mold ?? 0);
       }
-      if (this.AirthingsDevice.sensors.pm25) {
+      if (this.airthingsDevice.sensors.pm25) {
         this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density).updateValue(this.latestSamples.data.pm25 ?? 0)
       }
       if (this.airthingsDevice.sensors.radonShortTermAvg) {
