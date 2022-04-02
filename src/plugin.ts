@@ -135,6 +135,10 @@ class AirthingsPlugin implements AccessoryPlugin {
       minStep: 1,
     }).updateValue(this.latestSamples.data.pressure ?? 1012));
 
+    this.airPressureService.addCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+      this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+    )
+
     //refresh values immediately when initialized
     this.refreshCharacteristics(api);
     
