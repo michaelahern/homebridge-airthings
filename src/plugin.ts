@@ -59,7 +59,7 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     this.log.info(`Device Model: ${this.airthingsDevice.model}`);
     this.log.info(`Serial Number: ${config.serialNumber}`);
-    this.log.info(`Refresh Interval: ${config.refreshInterval}`)
+    this.log.info(`Refresh Interval: ${config.refreshInterval}s`)
 
     // HomeKit Information Service
     this.informationService = new api.hap.Service.AccessoryInformation()
