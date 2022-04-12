@@ -172,11 +172,11 @@ class AirthingsPlugin implements AccessoryPlugin {
       if (this.airthingsConfig.serialNumber == null) {
         return;
       }
-      this.log.info("Refreshing latest samples...");
+      this.log.debug("Refreshing latest samples...");
 
       try {
         this.latestSamples = await this.airthingsApi.getLatestSamples(this.airthingsConfig.serialNumber);
-        this.log.info(JSON.stringify(this.latestSamples.data));
+        this.log.debug(JSON.stringify(this.latestSamples.data));
       }
       catch (err) {
         if (err instanceof Error) {
