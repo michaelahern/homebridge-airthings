@@ -25,6 +25,12 @@
         "title": "Serial Number",
         "type": "string",
         "required": true
+      },
+      "refreshInterval": {
+        "title": "Refresh Interval (seconds)",
+        "type": "number",
+        "required": true,
+        "default": 300
       }
     }
   }
