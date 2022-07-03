@@ -41,12 +41,14 @@ class AirthingsPlugin implements AccessoryPlugin {
       log.error("Missing required config value: serialNumber");
       config.serialNumber = "0000000000";
     }
+
     if (config.refreshInterval == null) {
       log.error("Missing required config value: refreshInterval, defaulting to 5 minutes");
       config.refreshInterval = 300;
     }
+
     if (config.refreshInterval < 60) {
-      log.warn("Refresh lower than 1 minute might cause rate-limiting, setting value to 1 minute...")
+      log.warn("Refresh interval lower than 1 minute might cause rate-limiting, setting to 1 minute")
       config.refreshInterval = 60;
     }
 
@@ -141,8 +143,8 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     //refresh values immediately when initialized
     this.refreshCharacteristics(api);
-    
-    this.refresher = setInterval(async() => {await this.refreshCharacteristics(api)}, config.refreshInterval * 1000)
+
+    this.refresher = setInterval(async () => { await this.refreshCharacteristics(api) }, config.refreshInterval * 1000)
   }
 
   getServices(): Service[] {
@@ -186,15 +188,15 @@ class AirthingsPlugin implements AccessoryPlugin {
     });
   }
 
-  async refreshCharacteristics (api: API) {
+  async refreshCharacteristics(api: API) {
     await this.getLatestSamples();
     this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).updateValue(this.latestSamples.data.battery ?? 100)
     this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).updateValue(this.latestSamples.data.battery == null || this.latestSamples.data.battery > 10
-                                                                                                ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-                                                                                                : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW)
-    
+      ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
+      : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW)
+
     this.airQualityService.getCharacteristic(api.hap.Characteristic.AirQuality).updateValue(this.getAirQuality(api, this.latestSamples))
-    
+
     if (this.airthingsDevice.sensors.mold) {
       this.airQualityService.getCharacteristic("Mold")!.updateValue(this.latestSamples.data.mold ?? 0)
     }
@@ -220,7 +222,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
       this.latestSamples.data.temp != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
     );
-    
+
     this.humidityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).updateValue(this.latestSamples.data.humidity ?? 0);
     this.humidityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
       this.latestSamples.data.humidity != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
@@ -228,14 +230,14 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideDetected).updateValue(
       this.latestSamples.data.co2 == null || this.latestSamples.data.co2 < 1000
-      ? api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
-      : api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
+        ? api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
+        : api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
     );
     this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).updateValue(this.latestSamples.data.co2 ?? 0);
     this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
       this.latestSamples.data.co2 != null && this.latestSamples.data.time != null && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
     );
-    
+
     this.airPressureService.getCharacteristic("Air Pressure")!.updateValue(this.latestSamples.data.pressure ?? 1012);
 
     this.airPressureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
@@ -327,8 +329,6 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     return aq;
   }
-
-
 }
 
 interface AirthingsPluginConfig extends AccessoryConfig {
