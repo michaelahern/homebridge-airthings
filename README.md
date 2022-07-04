@@ -70,3 +70,31 @@ Field           	     | Description
     * Access Type: confidential
     * Flow Type: Client Credentials (machine-to-machine)
     * Enable: On
+
+## Usage
+
+### Air Quality
+
+Air Quality is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO2), and Humidity sensors, depending on the  sensors supported by your device. Air Quality values are based on [Airthings defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds).
+
+Apple HomeKit does not natively support Radon sensors. An optional Radon sensor implemented using a Leak Sensor.
+
+Sensor | <svg height="10" width="10"><circle cx="5" cy="5" r="5" fill="#6dd559"></circle></svg> Excellent | <svg height="10" width="10"><circle cx="5" cy="5" r="5" fill="#f5b444"></circle></svg> Fair | <svg height="10" width="10"><circle cx="5" cy="5" r="5" fill="#ff5b32"></circle></svg> Poor |
+----------------------------------|---------------|--------------------------------|----------------|
+Radon                             | <100 Bq/m³    | ≥100 and <150 Bq/m³            | ≥150 Bq/m³     |
+Particulate Matter (PM2.5)        | <10 μg/m³     | ≥10 and <25 μg/m³              | ≥25 μg/m³      |
+Volatile Organic Compounds (VOCs) | <250 ppb      | ≥250 and <2000 ppb             | ≥2000 ppb      |
+Carbon Dioxide (CO2)              | <800 ppm      | ≥800 and <1000 ppm             | ≥1000 ppm      |
+Humidity                          | ≥30 and <60 % | ≥25 and <30 % or ≥60 and <70 % | <25 % or ≥70 % |
+
+### Air Pressure
+
+Air Pressure Sensors are implemented using a custom HomeKit service that is supported by some third-party HomeKit apps, including [Eve](https://www.evehome.com/en-us/eve-app) and [Home+](https://hochgatterer.me/home+/). Air Pressure Sensors are not natively supported by Apple HomeKit, and are thus not visible in the Apple Home app.
+
+### Carbon Dioxide (CO2)
+
+Carbon Dioxide Sensors are supported and implemented using standard Apple-defined services. The Carbon Dioxide Detected threshold is ≥1000 ppm.
+
+### Temperature & Humidity
+
+Temperature & Humidity Sensors are supported and implemented using standard Apple-defined services.
