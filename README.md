@@ -42,7 +42,8 @@ Example accessory config in the Homebridge config.json:
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
     "serialNumber": "2960123456",
-    "refreshInterval": 300
+    "refreshInterval": 150,
+    "radonLeakThreshold": 150
   }
 ]
 ```
@@ -56,8 +57,8 @@ Field           	     | Description
 **clientId**			     | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	     | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	     | (required) Serial number of the device
-**refreshInterval**	   | (optional) Refresh interval in seconds for refreshng sensor data, default is 150 seconds
-**radonLeakThreshold** | (optional) Enable and configure a HomeKit Leak Sensor for Radon with a threshold in Bq/m³, disabled by default
+**refreshInterval**	   | (optional) Interval in seconds for refreshng sensor data, default is 150s
+**radonLeakThreshold** | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, disabled by default
 
 ### How to request an Airthings API Client ID & Secret
 
