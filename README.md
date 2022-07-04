@@ -57,7 +57,7 @@ Field           	     | Description
 **clientId**			     | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	     | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	     | (required) Serial number of the device
-**refreshInterval**	   | (optional) Interval in seconds for refreshng sensor data, default is 150s
+**refreshInterval**	   | (optional) Interval in seconds for refreshng sensor data, default is 150s<br/>Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)
 **radonLeakThreshold** | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, disabled by default
 
 ### How to request an Airthings API Client ID & Secret
