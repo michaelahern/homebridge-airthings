@@ -56,7 +56,7 @@ Field           	  | Description
 **clientId**			  | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	  | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	  | (required) Serial number of the device
-**refreshInterval**	| (required) Refresh interval for grabbing new data, default is 5 minutes
+**refreshInterval**	| (optional) Refresh interval in seconds for refreshng sensor data, default is 150 seconds
 
 ### How to request an Airthings API Client ID & Secret
 

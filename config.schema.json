@@ -29,8 +29,8 @@
       "refreshInterval": {
         "title": "Refresh Interval (seconds)",
         "type": "number",
-        "required": true,
-        "default": 300
+        "required": false,
+        "default": 150
       }
     }
   }

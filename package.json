@@ -32,7 +32,6 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "async-mutex": "^0.3.2",
     "axios": "^0.27.2",
     "simple-oauth2": "^4.3.0"
   },
