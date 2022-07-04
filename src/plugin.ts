@@ -101,7 +101,7 @@ class AirthingsPlugin implements AccessoryPlugin {
         perms: [Perms.NOTIFY, Perms.PAIRED_READ],
         unit: "Bq/m³",
         minValue: 0,
-        maxValue: 16383,
+        maxValue: 20000,
         minStep: 1
       }));
     }
