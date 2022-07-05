@@ -111,6 +111,17 @@ class AirthingsPlugin implements AccessoryPlugin {
       maxValue: 65535
     });
 
+    if (this.airthingsDevice.sensors.voc) {
+      this.airQualityService.addCharacteristic(new api.hap.Characteristic("VOC Density (ppb)", "E5B6DA60-E041-472A-BE2B-8318B8A724C5", {
+        format: Formats.UINT16,
+        perms: [Perms.NOTIFY, Perms.PAIRED_READ],
+        unit: "ppb",
+        minValue: 0,
+        maxValue: 10000,
+        minStep: 1
+      }));
+    }
+
     // HomeKit Temperature Service
     this.temperatureService = new api.hap.Service.TemperatureSensor("Temp");
 
@@ -136,17 +147,6 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     // HomeKit Radon (Leak) Service
     this.radonService = new api.hap.Service.LeakSensor("Radon");
-
-    if (this.airthingsDevice.sensors.radonShortTermAvg) {
-      this.radonService.addCharacteristic(new api.hap.Characteristic("Radon", "B42E01AA-ADE7-11E4-89D3-123B93F75CBA", {
-        format: Formats.UINT16,
-        perms: [Perms.NOTIFY, Perms.PAIRED_READ],
-        unit: "Bq/m³",
-        minValue: 0,
-        maxValue: 16383,
-        minStep: 1
-      }));
-    }
 
     this.refreshCharacteristics(api);
     this.timer = setInterval(async () => { await this.refreshCharacteristics(api) }, config.refreshInterval * 1000);
@@ -237,6 +237,10 @@ class AirthingsPlugin implements AccessoryPlugin {
       this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)!.updateValue(
         this.latestSamples.data.voc != undefined ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0
       );
+
+      this.airQualityService.getCharacteristic("VOC Density (ppb)")!.updateValue(
+        this.latestSamples.data.voc ?? 0
+      );
     }
 
     this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
@@ -291,12 +295,6 @@ class AirthingsPlugin implements AccessoryPlugin {
         ? api.hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED
         : api.hap.Characteristic.LeakDetected.LEAK_DETECTED
     );
-
-    if (this.airthingsDevice.sensors.radonShortTermAvg) {
-      this.radonService.getCharacteristic("Radon")!.updateValue(
-        this.latestSamples.data.radonShortTermAvg ?? 0
-      );
-    }
 
     this.radonService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
       this.latestSamples.data.radonShortTermAvg != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60

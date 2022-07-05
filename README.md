@@ -57,7 +57,7 @@ Field           	     | Description
 **clientId**			     | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	     | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	     | (required) Serial number of the device
-**refreshInterval**	   | (optional) Interval in seconds for refreshng sensor data, default is 150s<br/>Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)
+**refreshInterval**	   | (optional) Interval in seconds for refreshng sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)_
 **radonLeakThreshold** | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, disabled by default
 
 ### How to request an Airthings API Client ID & Secret
@@ -71,13 +71,11 @@ Field           	     | Description
     * Flow Type: Client Credentials (machine-to-machine)
     * Enable: On
 
-## Usage
+## HomeKit Sensors
 
 ### Air Quality
 
-Air Quality is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO2), and Humidity sensors, depending on the  sensors supported by your device. Air Quality values are based on [Airthings defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds).
-
-Apple HomeKit does not natively support Radon sensors. An optional Radon sensor implemented using a Leak Sensor.
+Air Quality Sensors are supported and implemented using standard Apple-defined services. Air Quality in this plugin is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO2), and Humidity sensors, depending on the sensors supported by your device. Air Quality values are based on [Airthings-defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds) for each sensor.
 
 Sensor                            | 🟢 Excellent  | 🟠 Fair                             | 🔴 Poor            |
 ----------------------------------|---------------|------------------------------------|--------------------|
@@ -87,9 +85,19 @@ Volatile Organic Compounds (VOCs) | <250 ppb      | ≥250 and <2000 ppb        
 Carbon Dioxide (CO2)              | <800 ppm      | ≥800 and <1000 ppm                 | ≥1000 ppm          |
 Humidity                          | ≥30 and <60 % | ≥25 and <30 % <br /> ≥60 and <70 % | <25 % <br /> ≥70 % |
 
+Notes:
+* Radon measurements are not visible in the Apple Home app, but are visible within some third-party HomeKit apps, including [Eve](https://www.evehome.com/en-us/eve-app) and [Home+](https://hochgatterer.me/home+/). See the below section for more details on Radon sensors.
+* This plugin converts Volatile Organic Compound (VOC) measurements from ppb (units Airthings devices report) to µg/m³ (units expected by Apple HomeKit).
+
+### Radon
+
+Radon Sensors are not natively supported by Apple HomeKit. However, by default, Radon is used as a factor in the Air Quality Sensor (see above) supported within Apple HomeKit.
+
+This HomeBridge plugin optionally supports a Radon Sensor by implementing a Leak Sensor, which is a standard Apple-defined HomeKit service. To enable this, specify a value for the optional radonLeakThreshold configuration property. Note this value is in Bq/m³, not pCi/L. This will be the Leak Detected threshold for the sensor in HomeKit, which can be used for Notifications and within Automations. The Radon measurement itself will not be visible in the Apple Home app, but is visible within some third-party HomeKit apps, including [Eve](https://www.evehome.com/en-us/eve-app) and [Home+](https://hochgatterer.me/home+/).
+
 ### Air Pressure
 
-Air Pressure Sensors are implemented using a custom HomeKit service that is supported by some third-party HomeKit apps, including [Eve](https://www.evehome.com/en-us/eve-app) and [Home+](https://hochgatterer.me/home+/). Air Pressure Sensors are not natively supported by Apple HomeKit, and are thus not visible in the Apple Home app.
+Air Pressure Sensors are implemented using a custom HomeKit service that is supported by some third-party HomeKit apps, including [Eve](https://www.evehome.com/en-us/eve-app) and [Home+](https://hochgatterer.me/home+/). Air Pressure Sensors are not natively supported by Apple HomeKit and therefore not visible in the Apple Home app.
 
 ### Carbon Dioxide (CO2)
 
