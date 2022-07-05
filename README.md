@@ -75,7 +75,7 @@ Field           	     | Description
 
 ### Air Quality
 
-Air Quality Sensors are supported and implemented using standard Apple-defined services. Air Quality in this plugin is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO2), and Humidity sensors, depending on the sensors supported by your device. Air Quality values are based on [Airthings-defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds) for each sensor.
+Air Quality Sensors are supported and implemented using standard Apple-defined services. Air Quality in this plugin is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO2), and Humidity sensors, depending on the sensors supported by your device. Air Quality values (Excellent, Fair, Poor) are based on [Airthings-defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds) for each sensor.
 
 Sensor                            | 🟢 Excellent  | 🟠 Fair                             | 🔴 Poor            |
 ----------------------------------|---------------|------------------------------------|--------------------|
@@ -91,7 +91,7 @@ Notes:
 
 ### Radon
 
-Radon Sensors are not natively supported by Apple HomeKit. However, by default, Radon is used as a factor in the Air Quality Sensor (see above) supported within Apple HomeKit.
+Radon Sensors are not natively supported by Apple HomeKit. However, by default, Radon is used as a factor in the Air Quality Sensor (see above).
 
 This HomeBridge plugin optionally supports a Radon Sensor by implementing a Leak Sensor, which is a standard Apple-defined HomeKit service. To enable this, specify a value for the optional radonLeakThreshold configuration property. Note this value is in Bq/m³, not pCi/L. This will be the Leak Detected threshold for the sensor in HomeKit, which can be used for Notifications and within Automations. The Radon measurement itself will not be visible in the Apple Home app, but is visible within some third-party HomeKit apps, including [Eve](https://www.evehome.com/en-us/eve-app) and [Home+](https://hochgatterer.me/home+/).
 
