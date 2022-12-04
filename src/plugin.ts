@@ -138,8 +138,8 @@ class AirthingsPlugin implements AccessoryPlugin {
       format: Formats.UINT16,
       perms: [Perms.NOTIFY, Perms.PAIRED_READ],
       unit: "mBar",
-      minValue: 850,
-      maxValue: 1100,
+      minValue: 0,
+      maxValue: 1200,
       minStep: 1,
     }));
 
