@@ -26,16 +26,22 @@
         "type": "string",
         "required": true
       },
-      "refreshInterval": {
-        "title": "Refresh Interval (seconds)",
-        "type": "number",
-        "required": false,
-        "default": 150
-      },
       "radonLeakThreshold": {
         "title": "Radon Leak Threshold (Bq/m³)",
         "type": "number",
         "required": false
+      },
+      "refreshInterval": {
+        "title": "Airthings API Refresh Interval (seconds)",
+        "type": "number",
+        "required": false,
+        "default": 150
+      },
+      "tokenScope": {
+        "title": "Airthings API Token Scope",
+        "type": "string",
+        "required": false,
+        "default": "read:device:current_values"
       }
     }
   }

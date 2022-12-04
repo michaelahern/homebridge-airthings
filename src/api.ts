@@ -5,8 +5,11 @@ export class AirthingsApi {
   private accessToken?: AccessToken;
 
   private readonly client?: ClientCredentials;
+  private readonly tokenScope: string;
 
-  constructor(clientId?: string, clientSecret?: string) {
+  constructor(tokenScope: string, clientId?: string, clientSecret?: string) {
+    this.tokenScope = tokenScope;
+
     if (clientId == null || clientSecret == null) {
       return;
     }
@@ -32,13 +35,13 @@ export class AirthingsApi {
 
     if (this.accessToken == null || this.accessToken?.expired(300)) {
       const tokenParams = {
-        scope: 'read:device:current_values',
+        scope: this.tokenScope
       };
       this.accessToken = await this.client.getToken(tokenParams);
     }
 
     const requestConfig = {
-      headers: { 'Authorization': this.accessToken.token.access_token }
+      headers: { "Authorization": this.accessToken.token.access_token }
     };
 
     const response = await axios.get<AirthingsApiDeviceSample>(`https://ext-api.airthings.com/v1/devices/${id}/latest-samples`, requestConfig);
