@@ -2,11 +2,7 @@ import { AirthingsApi, AirthingsApiDeviceSample } from "./api";
 import { AirthingsDevice, AirthingsDeviceInfo } from "./device";
 import { AccessoryConfig, AccessoryPlugin, API, Formats, Logging, Perms, Service } from "homebridge";
 
-export = (api: API) => {
-  api.registerAccessory("Airthings", AirthingsPlugin);
-};
-
-class AirthingsPlugin implements AccessoryPlugin {
+export class AirthingsPlugin implements AccessoryPlugin {
   private readonly log: Logging;
   private readonly timer: NodeJS.Timer;
 
@@ -219,7 +215,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     );
 
     if (this.airthingsDevice.sensors.mold) {
-      this.airQualityService.getCharacteristic("Mold")!.updateValue(
+      this.airQualityService.getCharacteristic("Mold")?.updateValue(
         this.latestSamples.data.mold ?? 0
       );
     }
@@ -231,7 +227,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     }
 
     if (this.airthingsDevice.sensors.radonShortTermAvg) {
-      this.airQualityService.getCharacteristic("Radon")!.updateValue(
+      this.airQualityService.getCharacteristic("Radon")?.updateValue(
         this.latestSamples.data.radonShortTermAvg ?? 0
       );
     }
@@ -239,11 +235,11 @@ class AirthingsPlugin implements AccessoryPlugin {
     if (this.airthingsDevice.sensors.voc) {
       const temp = this.latestSamples.data.temp ?? 25;
       const pressure = this.latestSamples.data.pressure ?? 1013;
-      this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)!.updateValue(
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)?.updateValue(
         this.latestSamples.data.voc != undefined ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0
       );
 
-      this.airQualityService.getCharacteristic("VOC Density (ppb)")!.updateValue(
+      this.airQualityService.getCharacteristic("VOC Density (ppb)")?.updateValue(
         this.latestSamples.data.voc ?? 0
       );
     }
@@ -286,7 +282,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     );
 
     // Eve Air Pressure Service
-    this.airPressureService.getCharacteristic("Air Pressure")!.updateValue(
+    this.airPressureService.getCharacteristic("Air Pressure")?.updateValue(
       this.latestSamples.data.pressure ?? 1012
     );
 
