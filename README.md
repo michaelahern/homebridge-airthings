@@ -64,7 +64,7 @@ Field           	     | Description
 ### How to request an Airthings API Client ID & Secret
 
 1. Login to the [Airthings Dashboard](https://dashboard.airthings.com)
-2. Navigate to *Integrations*, then *Request API Client*
+2. Navigate to *Integrations*, then *API*, then *Request API Client*
 3. Create a new API Client with the following configuration:
     * Name: Homebridge
     * Resource Scope: read:device:current_values
