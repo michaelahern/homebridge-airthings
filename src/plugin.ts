@@ -249,7 +249,7 @@ class AirthingsPlugin implements AccessoryPlugin {
 
     // HomeKit Temperature Service
     this.temperatureService.getCharacteristic(api.hap.Characteristic.CurrentTemperature).updateValue(
-      this.latestSamples.data.temp ?? null
+      this.latestSamples.data.temp ?? 0
     );
 
     this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
