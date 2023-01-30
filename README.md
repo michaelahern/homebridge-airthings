@@ -57,13 +57,14 @@ Field           	     | Description
 **clientId**			     | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	     | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	     | (required) Serial number of the device
-**refreshInterval**	   | (optional) Interval in seconds for refreshng sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)_
 **radonLeakThreshold** | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, disabled by default
+**refreshInterval**	   | (optional) Interval in seconds for refreshng sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)_
+**tokenScope**         | (optional, *experimental*) Configure a custom [Airthings API Token Scope](https://developer.airthings.com/api-docs#section/Authentication), default is read:device:current_values
 
 ### How to request an Airthings API Client ID & Secret
 
 1. Login to the [Airthings Dashboard](https://dashboard.airthings.com)
-2. Navigate to *Integrations*, then *Request API Client*
+2. Navigate to *Integrations*, then *API*, then *Request API Client*
 3. Create a new API Client with the following configuration:
     * Name: Homebridge
     * Resource Scope: read:device:current_values

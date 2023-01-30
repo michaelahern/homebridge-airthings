@@ -2,11 +2,7 @@ import { AirthingsApi, AirthingsApiDeviceSample } from "./api";
 import { AirthingsDevice, AirthingsDeviceInfo } from "./device";
 import { AccessoryConfig, AccessoryPlugin, API, Formats, Logging, Perms, Service } from "homebridge";
 
-export = (api: API) => {
-  api.registerAccessory("Airthings", AirthingsPlugin);
-};
-
-class AirthingsPlugin implements AccessoryPlugin {
+export class AirthingsPlugin implements AccessoryPlugin {
   private readonly log: Logging;
   private readonly timer: NodeJS.Timer;
 
@@ -43,6 +39,11 @@ class AirthingsPlugin implements AccessoryPlugin {
       config.serialNumber = "0000000000";
     }
 
+    if (config.radonLeakThreshold != undefined && !Number.isSafeInteger(config.radonLeakThreshold)) {
+      this.log.warn("Invalid config value: radonLeakThreshold (not a valid integer)")
+      config.radonLeakThreshold = undefined;
+    }
+
     if (config.refreshInterval == undefined || !Number.isSafeInteger(config.refreshInterval)) {
       this.log.warn("Invalid config value: refreshInterval (not a valid integer)")
       config.refreshInterval = 150;
@@ -53,22 +54,22 @@ class AirthingsPlugin implements AccessoryPlugin {
       config.refreshInterval = 60;
     }
 
-    if (config.radonLeakThreshold != undefined && !Number.isSafeInteger(config.radonLeakThreshold)) {
-      this.log.warn("Invalid config value: radonLeakThreshold (not a valid integer)")
-      config.radonLeakThreshold = undefined;
+    if (config.tokenScope == undefined) {
+      config.tokenScope = 'read:device:current_values';
     }
 
-    this.airthingsApi = new AirthingsApi(config.clientId, config.clientSecret);
+    this.airthingsApi = new AirthingsApi(config.tokenScope, config.clientId, config.clientSecret);
     this.airthingsConfig = config;
     this.airthingsDevice = AirthingsDevice.getDevice(config.serialNumber);
 
     this.log.info(`Device Model: ${this.airthingsDevice.model}`);
     this.log.info(`Serial Number: ${this.airthingsConfig.serialNumber}`);
-    this.log.info(`Refresh Interval: ${this.airthingsConfig.refreshInterval}s`);
     this.log.info(`Radon Leak Sensor: ${this.airthingsDevice.sensors.radonShortTermAvg ? (this.airthingsConfig.radonLeakThreshold != undefined ? "Enabled" : "Disabled") : "Not Supported"}`);
     if (this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold != undefined) {
       this.log.info(`Radon Leak Threshold: ${this.airthingsConfig.radonLeakThreshold} Bq/m³`);
     }
+    this.log.info(`Refresh Interval: ${this.airthingsConfig.refreshInterval}s`);
+    this.log.info(`Token Scope: ${this.airthingsConfig.tokenScope}`);
 
     // HomeKit Accessory Information Service
     this.informationService = new api.hap.Service.AccessoryInformation()
@@ -138,8 +139,8 @@ class AirthingsPlugin implements AccessoryPlugin {
       format: Formats.UINT16,
       perms: [Perms.NOTIFY, Perms.PAIRED_READ],
       unit: "mBar",
-      minValue: 850,
-      maxValue: 1100,
+      minValue: 0,
+      maxValue: 1200,
       minStep: 1,
     }));
 
@@ -214,7 +215,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     );
 
     if (this.airthingsDevice.sensors.mold) {
-      this.airQualityService.getCharacteristic("Mold")!.updateValue(
+      this.airQualityService.getCharacteristic("Mold")?.updateValue(
         this.latestSamples.data.mold ?? 0
       );
     }
@@ -226,7 +227,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     }
 
     if (this.airthingsDevice.sensors.radonShortTermAvg) {
-      this.airQualityService.getCharacteristic("Radon")!.updateValue(
+      this.airQualityService.getCharacteristic("Radon")?.updateValue(
         this.latestSamples.data.radonShortTermAvg ?? 0
       );
     }
@@ -234,11 +235,11 @@ class AirthingsPlugin implements AccessoryPlugin {
     if (this.airthingsDevice.sensors.voc) {
       const temp = this.latestSamples.data.temp ?? 25;
       const pressure = this.latestSamples.data.pressure ?? 1013;
-      this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)!.updateValue(
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)?.updateValue(
         this.latestSamples.data.voc != undefined ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0
       );
 
-      this.airQualityService.getCharacteristic("VOC Density (ppb)")!.updateValue(
+      this.airQualityService.getCharacteristic("VOC Density (ppb)")?.updateValue(
         this.latestSamples.data.voc ?? 0
       );
     }
@@ -281,7 +282,7 @@ class AirthingsPlugin implements AccessoryPlugin {
     );
 
     // Eve Air Pressure Service
-    this.airPressureService.getCharacteristic("Air Pressure")!.updateValue(
+    this.airPressureService.getCharacteristic("Air Pressure")?.updateValue(
       this.latestSamples.data.pressure ?? 1012
     );
 
@@ -390,6 +391,7 @@ interface AirthingsPluginConfig extends AccessoryConfig {
   clientId?: string;
   clientSecret?: string;
   serialNumber?: string;
-  refreshInterval?: number;
   radonLeakThreshold?: number;
+  refreshInterval?: number;
+  tokenScope?: string;
 }

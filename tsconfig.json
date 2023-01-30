@@ -1,19 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 14",
   "compilerOptions": {
-    "lib": [
-      "es2020"
-    ],
+    "target": "es2022",
     "module": "commonjs",
-    "target": "es2020",
+    "lib": ["es2022"],
     "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "src/"
-  ]
+  "include": ["src/"]
 }

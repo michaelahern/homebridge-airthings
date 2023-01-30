@@ -1,6 +1,6 @@
 {
   "name": "homebridge-airthings",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A Homebridge plugin for Airthings air quality monitors via the Airthings Consumer API.",
   "keywords": [
     "airthings",
@@ -27,23 +27,31 @@
     "url": "git://github.com/michaelahern/homebridge-airthings.git"
   },
   "scripts": {
-    "build": "rimraf dist && tsc",
-    "clean": "rimraf dist",
-    "prepublishOnly": "npm run build"
+    "eslint": "eslint src/**.ts --max-warnings=0",
+    "eslint-fix": "eslint src/**.ts --max-warnings=0 --fix",
+    "lint": "npm run eslint",
+    "lint-fix": "npm run eslint-fix",
+    "fmt": "npm run lint-fix",
+    "build": "npm run clean && tsc",
+    "clean": "rimraf ./dist",
+    "prepublishOnly": "npm run lint && npm run build"
   },
   "dependencies": {
-    "axios": "^0.27.2",
-    "simple-oauth2": "^4.3.0"
+    "axios": "^1.2.0",
+    "simple-oauth2": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^18.0.1",
+    "@types/node": "^18.11.10",
     "@types/simple-oauth2": "^4.1.1",
-    "homebridge": "^1.5.0",
+    "@typescript-eslint/eslint-plugin": "~5.47",
+    "@typescript-eslint/parser": "~5.47",
+    "eslint": "~8.23",
+    "homebridge": "^1.6.0",
     "rimraf": "^3.0.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.9.3"
   },
   "engines": {
-    "homebridge": ">=1.4.0",
+    "homebridge": ">=1.5.0",
     "node": ">=14"
   }
 }
