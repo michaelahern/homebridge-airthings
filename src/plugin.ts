@@ -249,14 +249,13 @@ export class AirthingsPlugin implements AccessoryPlugin {
     );
 
     // HomeKit Temperature Service
-    this.temperatureService.getCharacteristic(api.hap.Characteristic.CurrentTemperature).updateValue(
-      this.latestSamples.data.temp ?? 0
-    );
+    if(this.latestSamples.data.temp) {
+    	this.temperatureService.getCharacteristic(api.hap.Characteristic.CurrentTemperature).updateValue(this.latestSamples.data.temp));
 
-    this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
-      this.latestSamples.data.temp != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
-    );
-
+    	this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+      		this.latestSamples.data.temp != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
+	}
+	
     // HomeKit Humidity Service
     this.humidityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).updateValue(
       this.latestSamples.data.humidity ?? 0
