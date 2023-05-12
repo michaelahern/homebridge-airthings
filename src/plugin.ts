@@ -186,7 +186,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
 
     try {
       this.latestSamples = await this.airthingsApi.getLatestSamples(this.airthingsConfig.serialNumber);
-      this.log.info(JSON.stringify(this.latestSamples.data));
+      this.log.debug(JSON.stringify(this.latestSamples.data));
     }
     catch (err) {
       if (err instanceof Error) {
