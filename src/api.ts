@@ -41,8 +41,8 @@ export class AirthingsApi {
     }
 
     const requestConfig = {
-      headers: { "Authorization": this.accessToken.token.access_token }
-    };
+      headers: { "Authorization": `${this.accessToken.token.access_token}` }
+    };    
 
     const response = await axios.get<AirthingsApiDeviceSample>(`https://ext-api.airthings.com/v1/devices/${id}/latest-samples`, requestConfig);
     return response.data;
