@@ -42,8 +42,11 @@ Example accessory config in the Homebridge config.json:
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
     "serialNumber": "2960123456",
+    "co2DetectedThreshold": 1000,
+    "radonLeakThreshold": 150,
+    "debug": false,
     "refreshInterval": 150,
-    "radonLeakThreshold": 150
+    "tokenScope": "read:device:current_values"
   }
 ]
 ```
@@ -78,14 +81,14 @@ Field           	       | Description
 
 ### Air Quality
 
-Air Quality Sensors are supported and implemented using standard Apple-defined services. Air Quality in this plugin is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO2), and Humidity sensors, depending on the sensors supported by your device. Air Quality values (Excellent, Fair, Poor) are based on [Airthings-defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds) for each sensor.
+Air Quality Sensors are supported and implemented using standard Apple-defined services. Air Quality in this plugin is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO₂), and Humidity sensors, depending on the sensors supported by your device. Air Quality values (Excellent, Fair, Poor) are based on [Airthings-defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds) for each sensor.
 
 Sensor                            | 🟢 Excellent  | 🟠 Fair                             | 🔴 Poor            |
 ----------------------------------|---------------|------------------------------------|--------------------|
 Radon                             | <100 Bq/m³    | ≥100 and <150 Bq/m³                | ≥150 Bq/m³         |
 Particulate Matter (PM2.5)        | <10 μg/m³     | ≥10 and <25 μg/m³                  | ≥25 μg/m³          |
 Volatile Organic Compounds (VOCs) | <250 ppb      | ≥250 and <2000 ppb                 | ≥2000 ppb          |
-Carbon Dioxide (CO2)              | <800 ppm      | ≥800 and <1000 ppm                 | ≥1000 ppm          |
+Carbon Dioxide (CO₂)              | <800 ppm      | ≥800 and <1000 ppm                 | ≥1000 ppm          |
 Humidity                          | ≥30 and <60 % | ≥25 and <30 % <br /> ≥60 and <70 % | <25 % <br /> ≥70 % |
 
 Notes:
