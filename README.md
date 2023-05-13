@@ -43,7 +43,7 @@ Example accessory config in the Homebridge config.json:
     "clientSecret": "11111111-1111-1111-1111-111111111111",
     "serialNumber": "2960123456",
     "co2DetectedThreshold": 1000,
-    "radonLeakThreshold": 150,
+    "radonLeakThreshold": 100,
     "debug": false,
     "refreshInterval": 150,
     "tokenScope": "read:device:current_values"
@@ -60,8 +60,8 @@ Field           	       | Description
 **clientId**			       | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	       | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	       | (required) Serial number of the device
-**co2DetectedThreshold** | (optional) Configure custom CO₂ detected threshold, default is 1000 ppm
-**radonLeakThreshold**   | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, disabled by default
+**co2DetectedThreshold** | (optional) Configure a custom CO₂ detected threshold, default is 1000 ppm
+**radonLeakThreshold**   | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
 **debug**                | (optional) Enable debug logging, disabled by default
 **refreshInterval**	     | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)_
 **tokenScope**           | (optional, *experimental*) Configure a custom [Airthings API Token Scope](https://developer.airthings.com/api-docs#section/Authentication), default is read:device:current_values
