@@ -39,6 +39,15 @@ export class AirthingsPlugin implements AccessoryPlugin {
       config.serialNumber = "0000000000";
     }
 
+    if (!config.co2DetectedThreshold) {
+      config.co2DetectedThreshold = 1000;
+    }
+
+    if (!Number.isSafeInteger(config.co2DetectedThreshold)) {
+      this.log.warn("Invalid config value: co2DetectedThreshold (not a valid integer)")
+      config.co2DetectedThreshold = 1000;
+    }
+
     if (config.radonLeakThreshold && !Number.isSafeInteger(config.radonLeakThreshold)) {
       this.log.warn("Invalid config value: radonLeakThreshold (not a valid integer)")
       config.radonLeakThreshold = undefined;
@@ -72,9 +81,12 @@ export class AirthingsPlugin implements AccessoryPlugin {
 
     this.log.info(`Device Model: ${this.airthingsDevice.model}`);
     this.log.info(`Serial Number: ${this.airthingsConfig.serialNumber}`);
-    this.log.info(`Radon Leak Sensor: ${this.airthingsDevice.sensors.radonShortTermAvg ? (this.airthingsConfig.radonLeakThreshold != undefined ? "Enabled" : "Disabled") : "Not Supported"}`);
-    if (this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold != undefined) {
-      this.log.info(`Radon Leak Threshold: ${this.airthingsConfig.radonLeakThreshold} Bq/m³`);
+
+    this.log.info("Sensor Settings:");
+    this.log.info(` * CO₂ Detected Threshold: ${this.airthingsConfig.co2DetectedThreshold} ppm`);
+    this.log.info(` * Radon Leak Sensor: ${this.airthingsDevice.sensors.radonShortTermAvg ? (this.airthingsConfig.radonLeakThreshold ? "Enabled" : "Disabled") : "Not Supported"}`);
+    if (this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold) {
+      this.log.info(` * Radon Leak Threshold: ${this.airthingsConfig.radonLeakThreshold} Bq/m³`);
     }
 
     this.log.info("Advanced Settings:");
@@ -274,9 +286,9 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 
     // HomeKit CO2 Service
-    if (this.latestSamples.data.co2) {
+    if (this.latestSamples.data.co2 && this.airthingsConfig.co2DetectedThreshold) {
       this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideDetected).updateValue(
-        this.latestSamples.data.co2 < 1000
+        this.latestSamples.data.co2 < this.airthingsConfig.co2DetectedThreshold
           ? api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
           : api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
       );
@@ -405,6 +417,7 @@ interface AirthingsPluginConfig extends AccessoryConfig {
   clientId?: string;
   clientSecret?: string;
   serialNumber?: string;
+  co2DetectedThreshold?: number;
   radonLeakThreshold?: number;
   debug?: boolean;
   refreshInterval?: number;

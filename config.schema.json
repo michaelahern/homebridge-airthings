@@ -26,6 +26,12 @@
         "type": "string",
         "required": true
       },
+      "co2DetectedThreshold": {
+        "title": "CO₂ Detected Threshold (ppm)",
+        "type": "number",
+        "required": false,
+        "placeholder": 1000
+      },
       "radonLeakThreshold": {
         "title": "Radon Leak Threshold (Bq/m³)",
         "type": "number",
@@ -34,21 +40,18 @@
       "debug": {
         "title": "Debug Logging",
         "type": "boolean",
-        "required": false,
-        "description": "Enable debug logging"
+        "required": false
       },
       "refreshInterval": {
         "title": "Airthings API Refresh Interval (seconds)",
         "type": "number",
         "required": false,
-        "description": "Interval in seconds for refreshing sensor data from the Airthings API",
         "placeholder": 150
       },
       "tokenScope": {
         "title": "Airthings API Token Scope",
         "type": "string",
         "required": false,
-        "description": "Configure a custom Airthings API Token Scope",
         "placeholder": "read:device:current_values"
       }
     }
@@ -61,12 +64,24 @@
       "expanded": true,
       "items": [
         {
-          "description": "Enter your myQ username and password below.",
           "items": [
             "name",
             "clientId",
             "clientSecret",
-            "serialNumber",
+            "serialNumber"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Sensor Settings (Optional)",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        {
+          "items": [
+            "co2DetectedThreshold",
             "radonLeakThreshold"
           ]
         }
@@ -79,7 +94,6 @@
       "expanded": false,
       "items": [
         {
-          "description": "These settings should be rarely used or needed by most people. Use these with caution.",
           "items": [
             "debug",
             "refreshInterval",
