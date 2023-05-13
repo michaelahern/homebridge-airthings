@@ -199,49 +199,39 @@ export class AirthingsPlugin implements AccessoryPlugin {
     await this.getLatestSamples();
 
     // HomeKit Battery Service
-    this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).updateValue(
-      this.latestSamples.data.battery ?? 100
-    );
-
-    this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).updateValue(
-      this.latestSamples.data.battery == undefined || this.latestSamples.data.battery > 10
-        ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
-        : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
-    );
+    if (this.latestSamples.data.battery) {
+      this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).updateValue(this.latestSamples.data.battery);
+      this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).updateValue(
+        this.latestSamples.data.battery > 10
+          ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
+          : api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
+      );
+    }
 
     // HomeKit Air Quality Service
     this.airQualityService.getCharacteristic(api.hap.Characteristic.AirQuality).updateValue(
       this.getAirQuality(api, this.latestSamples)
     );
 
-    if (this.airthingsDevice.sensors.mold) {
-      this.airQualityService.getCharacteristic("Mold")?.updateValue(
-        this.latestSamples.data.mold ?? 0
-      );
+    if (this.latestSamples.data.mold) {
+      this.airQualityService.getCharacteristic("Mold")?.updateValue(this.latestSamples.data.mold);
     }
 
-    if (this.airthingsDevice.sensors.pm25) {
-      this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density).updateValue(
-        this.latestSamples.data.pm25 ?? 0
-      );
+    if (this.latestSamples.data.pm25) {
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density).updateValue(this.latestSamples.data.pm25);
     }
 
-    if (this.airthingsDevice.sensors.radonShortTermAvg) {
-      this.airQualityService.getCharacteristic("Radon")?.updateValue(
-        this.latestSamples.data.radonShortTermAvg ?? 0
-      );
+    if (this.latestSamples.data.radonShortTermAvg) {
+      this.airQualityService.getCharacteristic("Radon")?.updateValue(this.latestSamples.data.radonShortTermAvg);
     }
 
-    if (this.airthingsDevice.sensors.voc) {
+    if (this.latestSamples.data.voc) {
       const temp = this.latestSamples.data.temp ?? 25;
       const pressure = this.latestSamples.data.pressure ?? 1013;
       this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)?.updateValue(
-        this.latestSamples.data.voc != undefined ? this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure))) : 0
+        this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure)))
       );
-
-      this.airQualityService.getCharacteristic("VOC Density (ppb)")?.updateValue(
-        this.latestSamples.data.voc ?? 0
-      );
+      this.airQualityService.getCharacteristic("VOC Density (ppb)")?.updateValue(this.latestSamples.data.voc);
     }
 
     this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
@@ -249,76 +239,88 @@ export class AirthingsPlugin implements AccessoryPlugin {
     );
 
     // HomeKit Temperature Service
-    if(this.latestSamples.data.temp) {
-    	this.temperatureService.getCharacteristic(api.hap.Characteristic.CurrentTemperature).updateValue(this.latestSamples.data.temp));
+    if (this.latestSamples.data.temp) {
+      this.temperatureService.getCharacteristic(api.hap.Characteristic.CurrentTemperature).updateValue(this.latestSamples.data.temp);
+      this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(true);
+    }
+    else {
+      this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+        this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+      );
+    }
 
-    	this.temperatureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
-      		this.latestSamples.data.temp != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60);
-	}
-	
     // HomeKit Humidity Service
-    this.humidityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).updateValue(
-      this.latestSamples.data.humidity ?? 0
-    );
-
-    this.humidityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
-      this.latestSamples.data.humidity != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
-    );
+    if (this.latestSamples.data.humidity) {
+      this.humidityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).updateValue(this.latestSamples.data.humidity);
+      this.humidityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(true);
+    }
+    else {
+      this.humidityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+        this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+      );
+    }
 
     // HomeKit CO2 Service
-    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideDetected).updateValue(
-      this.latestSamples.data.co2 == undefined || this.latestSamples.data.co2 < 1000
-        ? api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
-        : api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
-    );
-
-    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).updateValue(
-      this.latestSamples.data.co2 ?? 0
-    );
-
-    this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
-      this.latestSamples.data.co2 != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
-    );
+    if (this.latestSamples.data.co2) {
+      this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideDetected).updateValue(
+        this.latestSamples.data.co2 < 1000
+          ? api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
+          : api.hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
+      );
+      this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).updateValue(this.latestSamples.data.co2);
+      this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(true);
+    }
+    else {
+      this.carbonDioxideService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+        this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+      );
+    }
 
     // Eve Air Pressure Service
-    this.airPressureService.getCharacteristic("Air Pressure")?.updateValue(
-      this.latestSamples.data.pressure ?? 1012
-    );
-
-    this.airPressureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
-      this.latestSamples.data.pressure != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
-    );
+    if (this.latestSamples.data.pressure) {
+      this.airPressureService.getCharacteristic("Air Pressure")?.updateValue(this.latestSamples.data.pressure);
+      this.airPressureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(true);
+    }
+    else {
+      this.airPressureService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+        this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+      );
+    }
 
     // HomeKit Radon (Leak) Service
-    this.radonService.getCharacteristic(api.hap.Characteristic.LeakDetected).updateValue(
-      this.latestSamples.data.radonShortTermAvg == undefined || this.latestSamples.data.radonShortTermAvg < (this.airthingsConfig.radonLeakThreshold ?? 0)
-        ? api.hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED
-        : api.hap.Characteristic.LeakDetected.LEAK_DETECTED
-    );
-
-    this.radonService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
-      this.latestSamples.data.radonShortTermAvg != undefined && this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
-    );
+    if (this.latestSamples.data.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold) {
+      this.radonService.getCharacteristic(api.hap.Characteristic.LeakDetected).updateValue(
+        this.latestSamples.data.radonShortTermAvg < this.airthingsConfig.radonLeakThreshold
+          ? api.hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED
+          : api.hap.Characteristic.LeakDetected.LEAK_DETECTED
+      );
+      this.radonService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(true);
+    }
+    else {
+      this.radonService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
+        this.latestSamples.data.time != undefined && Date.now() / 1000 - this.latestSamples.data.time < 2 * 60 * 60
+      );
+    }
   }
 
   getAirQuality(api: API, latestSamples: AirthingsApiDeviceSample) {
     let aq = api.hap.Characteristic.AirQuality.UNKNOWN;
 
     const humidity = latestSamples.data.humidity;
-    if (humidity != undefined) {
+    if (humidity) {
       if (humidity < 25 || humidity >= 70) {
-        aq = api.hap.Characteristic.AirQuality.POOR;
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
       else if (humidity < 30 || humidity >= 60) {
-        aq = api.hap.Characteristic.AirQuality.FAIR;
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
       }
       else {
-        aq = api.hap.Characteristic.AirQuality.EXCELLENT;
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
       }
     }
 
     const co2 = latestSamples.data.co2;
-    if (co2 != undefined) {
+    if (co2) {
       if (co2 >= 1000) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -331,7 +333,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 
     const mold = latestSamples.data.mold;
-    if (mold != undefined) {
+    if (mold) {
       if (mold >= 5) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -344,7 +346,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 
     const pm25 = latestSamples.data.pm25;
-    if (pm25 != undefined) {
+    if (pm25) {
       if (pm25 >= 25) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -357,7 +359,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 
     const radonShortTermAvg = latestSamples.data.radonShortTermAvg;
-    if (radonShortTermAvg != undefined) {
+    if (radonShortTermAvg) {
       if (radonShortTermAvg >= 150) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -370,7 +372,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 
     const voc = latestSamples.data.voc;
-    if (voc != undefined) {
+    if (voc) {
       if (voc >= 2000) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
