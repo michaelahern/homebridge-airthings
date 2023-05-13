@@ -31,18 +31,62 @@
         "type": "number",
         "required": false
       },
+      "debug": {
+        "title": "Debug Logging",
+        "type": "boolean",
+        "required": false,
+        "description": "Enable debug logging"
+      },
       "refreshInterval": {
         "title": "Airthings API Refresh Interval (seconds)",
         "type": "number",
         "required": false,
-        "default": 150
+        "description": "Interval in seconds for refreshing sensor data from the Airthings API",
+        "placeholder": 150
       },
       "tokenScope": {
         "title": "Airthings API Token Scope",
         "type": "string",
         "required": false,
-        "default": "read:device:current_values"
+        "description": "Configure a custom Airthings API Token Scope",
+        "placeholder": "read:device:current_values"
       }
     }
-  }
+  },
+  "layout": [
+    {
+      "type": "section",
+      "title": "General Settings",
+      "expandable": true,
+      "expanded": true,
+      "items": [
+        {
+          "description": "Enter your myQ username and password below.",
+          "items": [
+            "name",
+            "clientId",
+            "clientSecret",
+            "serialNumber",
+            "radonLeakThreshold"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Advanced Settings (Optional)",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        {
+          "description": "These settings should be rarely used or needed by most people. Use these with caution.",
+          "items": [
+            "debug",
+            "refreshInterval",
+            "tokenScope"
+          ]
+        }
+      ]
+    }
+  ]
 }

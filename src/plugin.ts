@@ -26,25 +26,33 @@ export class AirthingsPlugin implements AccessoryPlugin {
   constructor(log: Logging, config: AirthingsPluginConfig, api: API) {
     this.log = log;
 
-    if (config.clientId == undefined) {
+    if (!config.clientId) {
       this.log.error("Missing required config value: clientId");
     }
 
-    if (config.clientSecret == undefined) {
+    if (!config.clientSecret) {
       this.log.error("Missing required config value: clientSecret");
     }
 
-    if (config.serialNumber == undefined) {
+    if (!config.serialNumber) {
       this.log.error("Missing required config value: serialNumber");
       config.serialNumber = "0000000000";
     }
 
-    if (config.radonLeakThreshold != undefined && !Number.isSafeInteger(config.radonLeakThreshold)) {
+    if (config.radonLeakThreshold && !Number.isSafeInteger(config.radonLeakThreshold)) {
       this.log.warn("Invalid config value: radonLeakThreshold (not a valid integer)")
       config.radonLeakThreshold = undefined;
     }
 
-    if (config.refreshInterval == undefined || !Number.isSafeInteger(config.refreshInterval)) {
+    if (!config.debug) {
+      config.debug = false;
+    }
+
+    if (!config.refreshInterval) {
+      config.refreshInterval = 150;
+    }
+
+    if (!Number.isSafeInteger(config.refreshInterval)) {
       this.log.warn("Invalid config value: refreshInterval (not a valid integer)")
       config.refreshInterval = 150;
     }
@@ -54,7 +62,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
       config.refreshInterval = 60;
     }
 
-    if (config.tokenScope == undefined) {
+    if (!config.tokenScope) {
       config.tokenScope = 'read:device:current_values';
     }
 
@@ -68,8 +76,11 @@ export class AirthingsPlugin implements AccessoryPlugin {
     if (this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold != undefined) {
       this.log.info(`Radon Leak Threshold: ${this.airthingsConfig.radonLeakThreshold} Bq/m³`);
     }
-    this.log.info(`Refresh Interval: ${this.airthingsConfig.refreshInterval}s`);
-    this.log.info(`Token Scope: ${this.airthingsConfig.tokenScope}`);
+
+    this.log.info("Advanced Settings:");
+    this.log.info(` * Debug Logging: ${this.airthingsConfig.debug}`);
+    this.log.info(` * Refresh Interval: ${this.airthingsConfig.refreshInterval}s`);
+    this.log.info(` * Token Scope: ${this.airthingsConfig.tokenScope}`);
 
     // HomeKit Accessory Information Service
     this.informationService = new api.hap.Service.AccessoryInformation()
@@ -186,7 +197,9 @@ export class AirthingsPlugin implements AccessoryPlugin {
 
     try {
       this.latestSamples = await this.airthingsApi.getLatestSamples(this.airthingsConfig.serialNumber);
-      this.log.debug(JSON.stringify(this.latestSamples.data));
+      if (this.airthingsConfig.debug) {
+        this.log.info(JSON.stringify(this.latestSamples.data));
+      }
     }
     catch (err) {
       if (err instanceof Error) {
@@ -393,6 +406,7 @@ interface AirthingsPluginConfig extends AccessoryConfig {
   clientSecret?: string;
   serialNumber?: string;
   radonLeakThreshold?: number;
+  debug?: boolean;
   refreshInterval?: number;
   tokenScope?: string;
 }
