@@ -251,10 +251,8 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 
     if (this.latestSamples.data.voc) {
-      const temp = this.latestSamples.data.temp ?? 25;
-      const pressure = this.latestSamples.data.pressure ?? 1013;
       this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)?.updateValue(
-        this.latestSamples.data.voc * (78 / (22.41 * ((temp + 273) / 273) * (1013 / pressure)))
+        this.latestSamples.data.voc * 2.2727
       );
       this.airQualityService.getCharacteristic("VOC Density (ppb)")?.updateValue(this.latestSamples.data.voc);
     }
