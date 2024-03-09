@@ -38,21 +38,21 @@
     "prepublishOnly": "npm run lint && npm run build"
   },
   "dependencies": {
-    "axios": "^1.4.0",
-    "simple-oauth2": "^5.0.0"
+    "axios": "~1.6",
+    "simple-oauth2": "~5.0"
   },
   "devDependencies": {
-    "@types/node": "~20",
+    "@types/node": "^20",
     "@types/simple-oauth2": "~5.0",
-    "@typescript-eslint/eslint-plugin": "~5.59",
-    "@typescript-eslint/parser": "~5.59",
-    "eslint": "~8.40",
-    "homebridge": "~1.6.0",
-    "rimraf": "~5.0",
-    "typescript": "~4.9"
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/parser": "^7",
+    "eslint": "^8",
+    "homebridge": "~1.7",
+    "rimraf": "^5",
+    "typescript": "~5.3"
   },
   "engines": {
-    "homebridge": ">=1.5.0",
-    "node": ">=16"
+    "homebridge": ">=1.6.0",
+    "node": ">=18"
   }
 }
