@@ -26,6 +26,31 @@
         "type": "string",
         "required": true
       },
+      "co2AirQualityDisabled": {
+        "title": "CO₂ Disabled in Air Quality Sensor",
+        "type": "boolean",
+        "required": false
+      },
+      "humidityAirQualityDisabled": {
+        "title": "Humidity Disabled in Air Quality Sensor",
+        "type": "boolean",
+        "required": false
+      },
+      "pm25AirQualityDisabled": {
+        "title": "PM2.5 Disabled in Air Quality Sensor",
+        "type": "boolean",
+        "required": false
+      },
+      "radonAirQualityDisabled": {
+        "title": "Radon Disabled in Air Quality Sensor",
+        "type": "boolean",
+        "required": false
+      },
+      "vocAirQualityDisabled": {
+        "title": "VOC Disabled in Air Quality Sensor",
+        "type": "boolean",
+        "required": false
+      },
       "co2DetectedThreshold": {
         "title": "CO₂ Detected Threshold (ppm)",
         "type": "number",
@@ -81,6 +106,11 @@
       "items": [
         {
           "items": [
+            "co2AirQualityDisabled",
+            "humidityAirQualityDisabled",
+            "pm25AirQualityDisabled",
+            "radonAirQualityDisabled",
+            "vocAirQualityDisabled",
             "co2DetectedThreshold",
             "radonLeakThreshold"
           ]

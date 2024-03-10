@@ -108,40 +108,43 @@ export class AirthingsPlugin implements AccessoryPlugin {
     // HomeKit Air Quality Service
     this.airQualityService = new api.hap.Service.AirQualitySensor("Air Quality");
 
-    if (this.airthingsDevice.sensors.mold) {
-      this.airQualityService.addCharacteristic(new api.hap.Characteristic("Mold", "68F9B9E6-88C7-4FB3-B8CE-60205F9F280E", {
-        format: Formats.UINT16,
-        perms: [Perms.NOTIFY, Perms.PAIRED_READ],
-        unit: "Risk",
-        minValue: 0,
-        maxValue: 10,
-        minStep: 1
-      }));
+    if (this.airthingsDevice.sensors.co2 && !this.airthingsConfig.co2AirQualityDisabled) {
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).setProps({});
     }
 
-    if (this.airthingsDevice.sensors.radonShortTermAvg) {
+    if (this.airthingsDevice.sensors.humidity && !this.airthingsConfig.humidityAirQualityDisabled) {
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).setProps({});
+    }
+
+    if (this.airthingsDevice.sensors.pm25 && !this.airthingsConfig.pm25AirQualityDisabled) {
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density).setProps({
+        unit: "µg/m³"
+      });
+    }
+
+    if (this.airthingsDevice.sensors.radonShortTermAvg && !this.airthingsConfig.radonAirQualityDisabled) {
       this.airQualityService.addCharacteristic(new api.hap.Characteristic("Radon", "B42E01AA-ADE7-11E4-89D3-123B93F75CBA", {
         format: Formats.UINT16,
         perms: [Perms.NOTIFY, Perms.PAIRED_READ],
         unit: "Bq/m³",
         minValue: 0,
-        maxValue: 20000,
+        maxValue: 65535,
         minStep: 1
       }));
     }
 
-    this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity).setProps({
-      unit: "µg/m³",
-      maxValue: 65535
-    });
+    if (this.airthingsDevice.sensors.voc && !this.airthingsConfig.vocAirQualityDisabled) {
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity).setProps({
+        unit: "µg/m³",
+        maxValue: 65535
+      });
 
-    if (this.airthingsDevice.sensors.voc) {
       this.airQualityService.addCharacteristic(new api.hap.Characteristic("VOC Density (ppb)", "E5B6DA60-E041-472A-BE2B-8318B8A724C5", {
         format: Formats.UINT16,
         perms: [Perms.NOTIFY, Perms.PAIRED_READ],
         unit: "ppb",
         minValue: 0,
-        maxValue: 10000,
+        maxValue: 65535,
         minStep: 1
       }));
     }
@@ -238,19 +241,23 @@ export class AirthingsPlugin implements AccessoryPlugin {
       this.getAirQuality(api, this.latestSamples)
     );
 
-    if (this.latestSamples.data.mold) {
-      this.airQualityService.getCharacteristic("Mold")?.updateValue(this.latestSamples.data.mold);
+    if (this.latestSamples.data.co2 && !this.airthingsConfig.co2AirQualityDisabled) {
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).updateValue(this.latestSamples.data.co2);
     }
 
-    if (this.latestSamples.data.pm25) {
+    if (this.latestSamples.data.humidity && !this.airthingsConfig.humidityAirQualityDisabled) {
+      this.airQualityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).updateValue(this.latestSamples.data.humidity);
+    }
+
+    if (this.latestSamples.data.pm25 && !this.airthingsConfig.pm25AirQualityDisabled) {
       this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density).updateValue(this.latestSamples.data.pm25);
     }
 
-    if (this.latestSamples.data.radonShortTermAvg) {
+    if (this.latestSamples.data.radonShortTermAvg && !this.airthingsConfig.radonAirQualityDisabled) {
       this.airQualityService.getCharacteristic("Radon")?.updateValue(this.latestSamples.data.radonShortTermAvg);
     }
 
-    if (this.latestSamples.data.voc) {
+    if (this.latestSamples.data.voc && !this.airthingsConfig.vocAirQualityDisabled) {
       this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)?.updateValue(
         this.latestSamples.data.voc * 2.2727
       );
@@ -329,21 +336,8 @@ export class AirthingsPlugin implements AccessoryPlugin {
   getAirQuality(api: API, latestSamples: AirthingsApiDeviceSample) {
     let aq = api.hap.Characteristic.AirQuality.UNKNOWN;
 
-    const humidity = latestSamples.data.humidity;
-    if (humidity) {
-      if (humidity < 25 || humidity >= 70) {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
-      }
-      else if (humidity < 30 || humidity >= 60) {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
-      }
-      else {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
-      }
-    }
-
     const co2 = latestSamples.data.co2;
-    if (co2) {
+    if (co2 && !this.airthingsConfig.co2AirQualityDisabled) {
       if (co2 >= 1000) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -351,25 +345,25 @@ export class AirthingsPlugin implements AccessoryPlugin {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
       }
       else {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
       }
     }
 
-    const mold = latestSamples.data.mold;
-    if (mold) {
-      if (mold >= 5) {
+    const humidity = latestSamples.data.humidity;
+    if (humidity && !this.airthingsConfig.humidityAirQualityDisabled) {
+      if (humidity < 25 || humidity >= 70) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
-      else if (mold >= 3) {
+      else if (humidity < 30 || humidity >= 60) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
       }
       else {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
       }
     }
 
     const pm25 = latestSamples.data.pm25;
-    if (pm25) {
+    if (pm25 && !this.airthingsConfig.pm25AirQualityDisabled) {
       if (pm25 >= 25) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -377,12 +371,12 @@ export class AirthingsPlugin implements AccessoryPlugin {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
       }
       else {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
       }
     }
 
     const radonShortTermAvg = latestSamples.data.radonShortTermAvg;
-    if (radonShortTermAvg) {
+    if (radonShortTermAvg && !this.airthingsConfig.radonAirQualityDisabled) {
       if (radonShortTermAvg >= 150) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -390,12 +384,12 @@ export class AirthingsPlugin implements AccessoryPlugin {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
       }
       else {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
       }
     }
 
     const voc = latestSamples.data.voc;
-    if (voc) {
+    if (voc && !this.airthingsConfig.vocAirQualityDisabled) {
       if (voc >= 2000) {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
       }
@@ -403,7 +397,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
         aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
       }
       else {
-        aq = Math.max(aq, api.hap.Characteristic.AirQuality.EXCELLENT);
+        aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
       }
     }
 
@@ -415,6 +409,11 @@ interface AirthingsPluginConfig extends AccessoryConfig {
   clientId?: string;
   clientSecret?: string;
   serialNumber?: string;
+  co2AirQualityDisabled?: boolean;
+  humidityAirQualityDisabled?: boolean;
+  pm25AirQualityDisabled?: boolean;
+  radonAirQualityDisabled?: boolean;
+  vocAirQualityDisabled?: boolean;
   co2DetectedThreshold?: number;
   radonLeakThreshold?: number;
   debug?: boolean;

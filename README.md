@@ -3,7 +3,6 @@
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![npm](https://badgen.net/npm/v/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
 [![npm](https://badgen.net/npm/dt/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
-[![License](https://badgen.net/github/license/michaelahern/homebridge-airthings)](LICENSE)
 [![Build](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml/badge.svg)](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml)
 [![Donate](https://badgen.net/badge/Donate/PayPal/green)](https://paypal.me/michaeljahern)
 
@@ -42,6 +41,11 @@ Example accessory config in the Homebridge config.json:
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
     "serialNumber": "2960123456",
+    "co2AirQualityDisabled": false,
+    "humidityAirQualityDisabled": false,
+    "pm25AirQualityDisabled": false,
+    "radonAirQualityDisabled": false,
+    "vocAirQualityDisabled": false,
     "co2DetectedThreshold": 1000,
     "radonLeakThreshold": 100,
     "debug": false,
@@ -53,18 +57,23 @@ Example accessory config in the Homebridge config.json:
 
 ### Configuration Details
 
-Field           	       | Description
--------------------------|------------
-**accessory**   	       | (required) Must be "Airthings"
-**name**					       | (required) Name for the device in HomeKit
-**clientId**			       | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
-**clientSecret**	       | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
-**serialNumber**	       | (required) Serial number of the device
-**co2DetectedThreshold** | (optional) Configure a custom CO₂ detected threshold, default is 1000 ppm
-**radonLeakThreshold**   | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
-**debug**                | (optional) Enable debug logging, disabled by default
-**refreshInterval**	     | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)_
-**tokenScope**           | (optional, *experimental*) Configure a custom [Airthings API Token Scope](https://developer.airthings.com/api-docs#section/Authentication), default is read:device:current_values
+Field           	             | Description
+-------------------------------|------------
+**accessory**   	             | (required) Must be "Airthings"
+**name**					             | (required) Name for the device in HomeKit
+**clientId**			             | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
+**clientSecret**	             | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
+**serialNumber**	             | (required) Serial number of the device
+**co2AirQualityDisabled**      | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
+**humidityAirQualityDisabled** | (optional) Disable Humidity in Air Quality sensor calculation. default is false
+**pm25AirQualityDisabled**     | (optional) Disable Particulate Matter (PM2.5) in Air Quality sensor calculation, default is false
+**radonAirQualityDisabled**    | (optional) Disable Radon in Air Quality sensor calculation, default is false
+**vocAirQualityDisabled**      | (optional) Disable VOC in Air Quality sensor calculation, default is false
+**co2DetectedThreshold**       | (optional) Configure a custom Carbon Dioxide (CO₂) detected threshold, default is 1000 ppm
+**radonLeakThreshold**         | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
+**debug**                      | (optional) Enable debug logging, disabled by default
+**refreshInterval**	           | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/api-rate-limit#airthings-consumer)_
+**tokenScope**                 | (optional, *experimental*) Configure a custom [Airthings API Token Scope](https://developer.airthings.com/api-docs#section/Authentication), default is read:device:current_values
 
 ### How to request an Airthings API Client ID & Secret
 
@@ -81,9 +90,9 @@ Field           	       | Description
 
 ### Air Quality
 
-Air Quality Sensors are supported and implemented using standard Apple-defined services. Air Quality in this plugin is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO₂), and Humidity sensors, depending on the sensors supported by your device. Air Quality values (Excellent, Fair, Poor) are based on [Airthings-defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds) for each sensor.
+Air Quality Sensors are supported and implemented using standard Apple-defined services. Air Quality in this plugin is a composite of Radon, Particulate Matter (PM2.5), Volatile Organic Compound (VOC), Carbon Dioxide (CO₂), and Humidity sensors, depending on the sensors supported by your device and your plugin configuration. Air Quality values (Good, Fair, Poor) are based on [Airthings-defined thresholds](https://help.airthings.com/en/articles/5367327-view-understanding-the-sensor-thresholds) for each sensor.
 
-Sensor                            | 🟢 Excellent  | 🟠 Fair                             | 🔴 Poor            |
+Sensor                            | 🟢 Good       | 🟠 Fair                            | 🔴 Poor            |
 ----------------------------------|---------------|------------------------------------|--------------------|
 Radon                             | <100 Bq/m³    | ≥100 and <150 Bq/m³                | ≥150 Bq/m³         |
 Particulate Matter (PM2.5)        | <10 μg/m³     | ≥10 and <25 μg/m³                  | ≥25 μg/m³          |
