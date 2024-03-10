@@ -1,7 +1,7 @@
 {
   "name": "homebridge-airthings",
   "displayName": "Homebridge Airthings",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Homebridge plugin for Airthings air quality monitors via the Airthings Consumer API.",
   "keywords": [
     "airthings",
