@@ -1,7 +1,7 @@
 import { API } from "homebridge";
 
-import { AirthingsPlugin } from "./plugin";
+import { AirthingsPlugin } from "./plugin.js";
 
-export = (api: API) => {
+export default (api: API) => {
   api.registerAccessory("Airthings", AirthingsPlugin);
 };

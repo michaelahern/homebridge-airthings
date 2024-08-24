@@ -1,5 +1,5 @@
-import { AirthingsApi, AirthingsApiDeviceSample } from "./api";
-import { AirthingsDevice, AirthingsDeviceInfo } from "./device";
+import { AirthingsApi, AirthingsApiDeviceSample } from "./api.js";
+import { AirthingsDevice, AirthingsDeviceInfo } from "./device.js";
 import { AccessoryConfig, AccessoryPlugin, API, Formats, Logging, Perms, Service } from "homebridge";
 
 export class AirthingsPlugin implements AccessoryPlugin {
