@@ -1,66 +1,66 @@
-import axios from "axios";
-import { AccessToken, ClientCredentials } from "simple-oauth2";
+import axios from 'axios';
+import { AccessToken, ClientCredentials } from 'simple-oauth2';
 
 export class AirthingsApi {
-  private accessToken?: AccessToken;
+    private accessToken?: AccessToken;
 
-  private readonly client?: ClientCredentials;
-  private readonly tokenScope: string;
+    private readonly client?: ClientCredentials;
+    private readonly tokenScope: string;
 
-  constructor(tokenScope: string, clientId?: string, clientSecret?: string) {
-    this.tokenScope = tokenScope;
+    constructor(tokenScope: string, clientId?: string, clientSecret?: string) {
+        this.tokenScope = tokenScope;
 
-    if (clientId == null || clientSecret == null) {
-      return;
+        if (clientId == null || clientSecret == null) {
+            return;
+        }
+
+        const config = {
+            client: {
+                id: clientId,
+                secret: clientSecret
+            },
+            auth: {
+                tokenHost: 'https://accounts.airthings.com',
+                tokenPath: 'https://accounts-api.airthings.com/v1/token'
+            }
+        };
+
+        this.client = new ClientCredentials(config);
     }
 
-    const config = {
-      client: {
-        id: clientId,
-        secret: clientSecret
-      },
-      auth: {
-        tokenHost: "https://accounts.airthings.com",
-        tokenPath: "https://accounts-api.airthings.com/v1/token"
-      }
-    };
+    public async getLatestSamples(id: string) {
+        if (this.client == null) {
+            throw new Error('Airthings API Client not initialized due to invalid configuration...');
+        }
 
-    this.client = new ClientCredentials(config);
-  }
+        if (this.accessToken == null || this.accessToken?.expired(300)) {
+            const tokenParams = {
+                scope: this.tokenScope
+            };
+            this.accessToken = await this.client.getToken(tokenParams);
+        }
 
-  public async getLatestSamples(id: string) {
-    if (this.client == null) {
-      throw new Error("Airthings API Client not initialized due to invalid configuration...");
+        const requestConfig = {
+            headers: { Authorization: `${this.accessToken.token.access_token}` }
+        };
+
+        const response = await axios.get<AirthingsApiDeviceSample>(`https://ext-api.airthings.com/v1/devices/${id}/latest-samples`, requestConfig);
+        return response.data;
     }
-
-    if (this.accessToken == null || this.accessToken?.expired(300)) {
-      const tokenParams = {
-        scope: this.tokenScope
-      };
-      this.accessToken = await this.client.getToken(tokenParams);
-    }
-
-    const requestConfig = {
-      headers: { "Authorization": `${this.accessToken.token.access_token}` }
-    };    
-
-    const response = await axios.get<AirthingsApiDeviceSample>(`https://ext-api.airthings.com/v1/devices/${id}/latest-samples`, requestConfig);
-    return response.data;
-  }
 }
 
 export interface AirthingsApiDeviceSample {
-  data: {
-    battery?: number;
-    co2?: number;
-    humidity?: number;
-    mold?: number;
-    pm1?: number;
-    pm25?: number;
-    pressure?: number;
-    radonShortTermAvg?: number;
-    temp?: number;
-    time?: number;
-    voc?: number;
-  }
+    data: {
+        battery?: number;
+        co2?: number;
+        humidity?: number;
+        mold?: number;
+        pm1?: number;
+        pm25?: number;
+        pressure?: number;
+        radonShortTermAvg?: number;
+        temp?: number;
+        time?: number;
+        voc?: number;
+    };
 }
