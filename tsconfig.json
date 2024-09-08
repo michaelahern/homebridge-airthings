@@ -10,6 +10,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]
