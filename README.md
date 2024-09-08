@@ -72,7 +72,7 @@ Field           	             | Description
 **co2DetectedThreshold**       | (optional) Configure a custom Carbon Dioxide (CO₂) detected threshold, default is 1000 ppm
 **radonLeakThreshold**         | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
 **debug**                      | (optional) Enable debug logging, disabled by default
-**refreshInterval**	           | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://developer.airthings.com/docs/consumer/api/rate-limit)_
+**refreshInterval**	           | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
 **tokenScope**                 | (optional, *experimental*) Configure a custom [Airthings API Token Scope](https://developer.airthings.com/api-docs#section/Authentication), default is read:device:current_values
 
 ### How to request an Airthings API Client ID & Secret
