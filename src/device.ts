@@ -105,7 +105,22 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
                     voc: false
                 }
             } as AirthingsDeviceInfo;
-        default:
+        case '3220':
+            return {
+                model: "Wave Enhance",
+                sensors: {
+                    co2: true,
+                    humidity: true,
+                    mold: false,
+                    pm1: false,
+                    pm25: false,
+                    pressure: true,
+                    radonShortTermAvg: false,
+                    temp: true,
+                    voc: true
+                }
+            } as AirthingsDeviceInfo;
+         default:
             return {
                 model: 'Unknown',
                 sensors: {
