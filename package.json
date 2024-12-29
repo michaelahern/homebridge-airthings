@@ -2,7 +2,7 @@
   "name": "homebridge-airthings",
   "displayName": "Homebridge Airthings",
   "type": "module",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A Homebridge plugin for Airthings air quality monitors via the Airthings Consumer API.",
   "keywords": [
     "airthings",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/simple-oauth2": "~5.0",
     "eslint": "^9",
     "homebridge": "~1.8",
@@ -53,7 +53,7 @@
     "typescript-eslint": "^8"
   },
   "engines": {
-    "homebridge": "^1.7.0 || ^2.0.0-beta.0",
-    "node": "^18 || ^20"
+    "homebridge": ">=1.8.0 || >=2.0.0",
+    "node": ">=18"
   }
 }
