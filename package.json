@@ -43,13 +43,13 @@
     "simple-oauth2": "~5.1"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2",
+    "@stylistic/eslint-plugin": "^3",
     "@types/node": "^22",
     "@types/simple-oauth2": "~5.0",
     "eslint": "^9",
     "homebridge": "~1.8",
     "rimraf": "^6",
-    "typescript": "~5.5",
+    "typescript": "~5.7",
     "typescript-eslint": "^8"
   },
   "engines": {
