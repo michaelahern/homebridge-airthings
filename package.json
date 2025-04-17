@@ -40,7 +40,7 @@
     "homebridge": "npm run build && npm link && homebridge -I 2>&1 | tee ~/.homebridge/homebridge.log"
   },
   "dependencies": {
-    "axios": "~1.7",
+    "axios": "~1.8",
     "simple-oauth2": "~5.1"
   },
   "devDependencies": {
