@@ -1,0 +1,16 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22",
+  "onCreateCommand": {
+    "homebridge-install": "sudo npm install -g --unsafe-perm homebridge homebridge-config-ui-x"
+  },
+  "postCreateCommand": {
+    "homebridge-config": ".devcontainer/postcreate.sh"
+  },
+  "portsAttributes": {
+    "8581": {
+      "label": "Homebridge",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "forwardPorts": [8581]
+}

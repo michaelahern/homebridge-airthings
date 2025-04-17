@@ -36,7 +36,8 @@
     "fmt": "npm run lint-fix",
     "build": "npm run clean && tsc",
     "clean": "rimraf ./dist",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run lint && npm run build",
+    "homebridge": "npm run build && homebridge 2>&1 | tee ~/.homebridge/homebridge.log"
   },
   "dependencies": {
     "axios": "~1.7",
