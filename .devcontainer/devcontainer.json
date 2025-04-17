@@ -3,6 +3,9 @@
   "onCreateCommand": {
     "homebridge-install": "sudo npm install -g --unsafe-perm homebridge homebridge-config-ui-x"
   },
+  "updateContentCommand": {
+    "npm-install": "npm install"
+  },
   "postCreateCommand": {
     "homebridge-config": ".devcontainer/postcreate.sh"
   },
