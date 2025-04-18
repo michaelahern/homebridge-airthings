@@ -12,6 +12,8 @@
             "name": "Config",
             "port": 8581,
             "platform": "config",
+            "auth": "none",
+            "theme": "green",
             "log": {
                 "method": "file",
                 "path": "~/.homebridge/homebridge.log"
