@@ -40,17 +40,17 @@
     "homebridge": "npm run build && npm link && homebridge -I 2>&1 | tee ~/.homebridge/homebridge.log"
   },
   "dependencies": {
-    "axios": "~1.7",
+    "axios": "~1.8",
     "simple-oauth2": "~5.1"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^3",
+    "@stylistic/eslint-plugin": "^4",
     "@types/node": "^22",
     "@types/simple-oauth2": "~5.0",
     "eslint": "^9",
-    "homebridge": "~1.8",
+    "homebridge": "~1.9",
     "rimraf": "^6",
-    "typescript": "~5.7",
+    "typescript": "~5.8",
     "typescript-eslint": "^8"
   },
   "engines": {
