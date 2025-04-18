@@ -67,7 +67,6 @@ Field           	             | Description
 **clientId**			             | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	             | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	             | (required) Serial number of the device
-**batteryDisabled**            | (optional) Disable Battery Service, default is false
 **co2AirQualityDisabled**      | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
 **humidityAirQualityDisabled** | (optional) Disable Humidity in Air Quality sensor calculation. default is false
 **pm25AirQualityDisabled**     | (optional) Disable Particulate Matter (PM2.5) in Air Quality sensor calculation, default is false
@@ -76,6 +75,7 @@ Field           	             | Description
 **co2DetectedThreshold**       | (optional) Configure a custom Carbon Dioxide (CO₂) detected threshold, default is 1000 ppm
 **radonLeakThreshold**         | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
 **debug**                      | (optional) Enable debug logging, disabled by default
+**batteryDisabled**            | (optional) Disable Battery Service, default is false
 **refreshInterval**	           | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
 **tokenScope**                 | (optional, *experimental*) Configure a custom [Airthings API Token Scope](https://developer.airthings.com/api-docs#section/Authentication), default is read:device:current_values
 
