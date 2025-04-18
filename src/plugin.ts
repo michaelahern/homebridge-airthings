@@ -182,7 +182,11 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 
     getServices(): Service[] {
-        const services = [this.informationService, this.batteryService, this.airQualityService];
+        const services = [this.informationService, this.airQualityService];
+
+        if (!this.airthingsConfig.batteryDisabled) {
+            services.push(this.batteryService);
+        }
 
         if (this.airthingsDevice.sensors.temp) {
             services.push(this.temperatureService);
@@ -411,6 +415,7 @@ interface AirthingsPluginConfig extends AccessoryConfig {
     clientId?: string;
     clientSecret?: string;
     serialNumber?: string;
+    batteryDisabled?: boolean;
     co2AirQualityDisabled?: boolean;
     humidityAirQualityDisabled?: boolean;
     pm25AirQualityDisabled?: boolean;

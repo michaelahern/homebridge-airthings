@@ -26,6 +26,11 @@
         "type": "string",
         "required": true
       },
+      "batteryDisabled": {
+        "title": "Battery Service Disabled",
+        "type": "boolean",
+        "required": false
+      },
       "co2AirQualityDisabled": {
         "title": "CO₂ Disabled in Air Quality Sensor",
         "type": "boolean",
@@ -106,6 +111,7 @@
       "items": [
         {
           "items": [
+            "batteryDisabled",
             "co2AirQualityDisabled",
             "humidityAirQualityDisabled",
             "pm25AirQualityDisabled",

@@ -43,6 +43,7 @@ Example accessory config in the Homebridge config.json:
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
     "serialNumber": "2960123456",
+    "batteryDisabled": false,
     "co2AirQualityDisabled": false,
     "humidityAirQualityDisabled": false,
     "pm25AirQualityDisabled": false,
@@ -66,6 +67,7 @@ Field           	             | Description
 **clientId**			             | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **clientSecret**	             | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
 **serialNumber**	             | (required) Serial number of the device
+**batteryDisabled**            | (optional) Disable Battery Service, default is false
 **co2AirQualityDisabled**      | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
 **humidityAirQualityDisabled** | (optional) Disable Humidity in Air Quality sensor calculation. default is false
 **pm25AirQualityDisabled**     | (optional) Disable Particulate Matter (PM2.5) in Air Quality sensor calculation, default is false
