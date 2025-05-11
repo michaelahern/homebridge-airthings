@@ -1,17 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "node18",
     "target": "es2022",
-    "module": "es2022",
-    "moduleResolution": "node",
-    "strict": true,
-    "rootDir": "src",
-    "outDir": "dist",
+    "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "strict": true
   },
-  "include": ["src"]
+  "include": ["src/**/*"]
 }
