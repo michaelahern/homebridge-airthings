@@ -33,7 +33,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "airthings-api": "~1.0",
+    "airthings-consumer-api": "~1.0",
     "axios": "~1.8",
     "simple-oauth2": "~5.1"
   },
