@@ -1,7 +1,6 @@
 {
   "name": "homebridge-airthings",
   "displayName": "Homebridge Airthings",
-  "type": "module",
   "version": "2.0.0-alpha.0",
   "description": "A Homebridge plugin for Airthings air quality monitors via the Airthings Consumer API.",
   "keywords": [
@@ -16,10 +15,18 @@
   "license": "ISC",
   "author": "Michael Ahern <michael.ahern@gmail.com>",
   "files": [
-    "config.schema.json",
-    "dist"
+    "./config.schema.json",
+    "./dist"
   ],
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./dist/module.js",
+      "types": "./dist/module.d.ts"
+    }
+  },
+  "main": "./dist/module.js",
+  "types": "./dist/module.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/michaelahern/homebridge-airthings.git"
