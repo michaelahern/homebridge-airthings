@@ -77,12 +77,6 @@
         "type": "number",
         "required": false,
         "placeholder": 150
-      },
-      "tokenScope": {
-        "title": "Airthings API Token Scope",
-        "type": "string",
-        "required": false,
-        "placeholder": "read:device:current_values"
       }
     }
   },
@@ -132,8 +126,7 @@
           "items": [
             "debug",
             "batteryDisabled",
-            "refreshInterval",
-            "tokenScope"
+            "refreshInterval"
           ]
         }
       ]

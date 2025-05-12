@@ -52,8 +52,7 @@ Example accessory config in the Homebridge config.json:
     "co2DetectedThreshold": 1000,
     "radonLeakThreshold": 100,
     "debug": false,
-    "refreshInterval": 150,
-    "tokenScope": "read:device:current_values"
+    "refreshInterval": 150
   }
 ]
 ```
@@ -77,7 +76,6 @@ Field           	             | Description
 **debug**                      | (optional) Enable debug logging, disabled by default
 **batteryDisabled**            | (optional) Disable Battery Service, default is false
 **refreshInterval**	           | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
-**tokenScope**                 | (optional, *experimental*) Configure a custom [Airthings API Token Scope](https://developer.airthings.com/api-docs#section/Authentication), default is read:device:current_values
 
 ### How to request an Airthings API Client ID & Secret
 
