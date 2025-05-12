@@ -72,10 +72,6 @@ export class AirthingsPlugin implements AccessoryPlugin {
             config.refreshInterval = 60;
         }
 
-        if (!config.tokenScope) {
-            config.tokenScope = 'read:device:current_values';
-        }
-
         this.airthingsClient = new AirthingsClient({
             clientId: config.clientId ?? '',
             clientSecret: config.clientSecret ?? ''
@@ -96,7 +92,6 @@ export class AirthingsPlugin implements AccessoryPlugin {
         this.log.info('Advanced Settings:');
         this.log.info(` * Debug Logging: ${this.airthingsConfig.debug}`);
         this.log.info(` * Refresh Interval: ${this.airthingsConfig.refreshInterval}s`);
-        this.log.info(` * Token Scope: ${this.airthingsConfig.tokenScope}`);
 
         // HomeKit Accessory Information Service
         this.informationService = new api.hap.Service.AccessoryInformation()
@@ -447,5 +442,4 @@ interface AirthingsPluginConfig extends AccessoryConfig {
     radonLeakThreshold?: number;
     debug?: boolean;
     refreshInterval?: number;
-    tokenScope?: string;
 }
