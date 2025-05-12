@@ -40,14 +40,11 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "airthings-consumer-api": "~1.0",
-    "axios": "~1.8",
-    "simple-oauth2": "~5.1"
+    "airthings-consumer-api": "~1.0"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^4",
     "@types/node": "^20",
-    "@types/simple-oauth2": "~5.0",
     "eslint": "^9",
     "homebridge": "~1.9",
     "rimraf": "^6",
