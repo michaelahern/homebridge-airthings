@@ -2,13 +2,13 @@
 
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![npm](https://badgen.net/npm/v/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
-[![npm](https://badgen.net/npm/dt/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
+[![node](https://badgen.net/npm/node/homebridge-wattbox-ip)](https://www.npmjs.com/package/homebridge-wattbox-ip)
+[![downloads](https://badgen.net/npm/dt/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
+[![npm](https://badgen.net/npm/v/homebridge-airthings/alpha)](https://www.npmjs.com/package/homebridge-airthings/v/alpha)
+[![node](https://badgen.net/npm/node/homebridge-wattbox-ip/alpha)](https://www.npmjs.com/package/homebridge-wattbox-ip/v/alpha)
 [![Build](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml/badge.svg)](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml)
-[![Donate](https://badgen.net/badge/Donate/PayPal/green)](https://paypal.me/michaeljahern)
 
-A [Homebridge](https://homebridge.io) plugin for
-[Airthings](https://www.airthings.com) air quality monitors via the 
-[Airthings Consumer API](https://developer.airthings.com/consumer-api-docs/).
+A [Homebridge](https://homebridge.io) plugin for [Airthings](https://www.airthings.com) air quality monitors via the  [Airthings Consumer API](https://developer.airthings.com/consumer-api-docs/).
 
 ## Requirements
 
