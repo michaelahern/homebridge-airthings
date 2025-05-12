@@ -5,7 +5,6 @@ import { AirthingsDeviceInfo, getAirthingsDeviceInfoBySerialNumber } from './dev
 
 export class AirthingsPlugin implements AccessoryPlugin {
     private readonly log: Logging;
-    private readonly timer: NodeJS.Timeout;
 
     private readonly airthingsClient: AirthingsClient;
     private readonly airthingsConfig: AirthingsPluginConfig;
@@ -181,7 +180,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
         this.radonService = new api.hap.Service.LeakSensor('Radon');
 
         this.refreshCharacteristics(api);
-        this.timer = setInterval(async () => {
+        setInterval(async () => {
             await this.refreshCharacteristics(api);
         }, config.refreshInterval * 1000);
     }
