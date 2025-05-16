@@ -5,6 +5,7 @@
     "outDir": "./dist",
     "module": "node18",
     "target": "es2022",
+    "moduleResolution": "nodenext",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
