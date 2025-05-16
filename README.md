@@ -57,13 +57,13 @@ Example accessory config in the Homebridge config.json:
 
 ### Configuration Details
 
-Field           	             | Description
+Field                          | Description
 -------------------------------|------------
-**accessory**   	             | (required) Must be "Airthings"
-**name**					             | (required) Name for the device in HomeKit
-**clientId**			             | (required) Client ID generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
-**clientSecret**	             | (required) Client Secret generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
-**serialNumber**	             | (required) Serial number of the device
+**accessory**                  | (required) Must be "Airthings"
+**name**                       | (required) Name for the device in HomeKit
+**clientId**                   | (required) Client ID generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
+**clientSecret**               | (required) Client Secret generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
+**serialNumber**               | (required) Serial number of the device
 **co2AirQualityDisabled**      | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
 **humidityAirQualityDisabled** | (optional) Disable Humidity in Air Quality sensor calculation. default is false
 **pm25AirQualityDisabled**     | (optional) Disable Particulate Matter (PM2.5) in Air Quality sensor calculation, default is false
@@ -73,7 +73,7 @@ Field           	             | Description
 **radonLeakThreshold**         | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
 **debug**                      | (optional) Enable debug logging, disabled by default
 **batteryDisabled**            | (optional) Disable Battery Service, default is false
-**refreshInterval**	           | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
+**refreshInterval**            | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
 
 ### How to request an Airthings API Client ID & Secret
 
