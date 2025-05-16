@@ -1,7 +1,7 @@
 {
   "name": "homebridge-airthings",
   "displayName": "Homebridge Airthings",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0",
   "description": "A Homebridge plugin for Airthings air quality monitors via the Airthings Consumer API.",
   "keywords": [
     "airthings",
@@ -40,7 +40,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "airthings-consumer-api": "~1.0"
+    "airthings-consumer-api": "^1"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^4",
