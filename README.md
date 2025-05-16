@@ -4,11 +4,9 @@
 [![npm](https://badgen.net/npm/v/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
 [![node](https://badgen.net/npm/node/homebridge-wattbox-ip)](https://www.npmjs.com/package/homebridge-wattbox-ip)
 [![downloads](https://badgen.net/npm/dt/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
-[![npm](https://badgen.net/npm/v/homebridge-airthings/alpha)](https://www.npmjs.com/package/homebridge-airthings/v/alpha)
-[![node](https://badgen.net/npm/node/homebridge-wattbox-ip/alpha)](https://www.npmjs.com/package/homebridge-wattbox-ip/v/alpha)
-[![Build](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml/badge.svg)](https://github.com/michaelahern/homebridge-airthings/actions/workflows/build.yml)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/michaelahern/homebridge-airthings)
 
-A [Homebridge](https://homebridge.io) plugin for [Airthings](https://www.airthings.com) air quality monitors via the  [Airthings Consumer API](https://developer.airthings.com/consumer-api-docs/).
+A [Homebridge](https://homebridge.io) plugin for [Airthings](https://www.airthings.com) air quality monitors via the  [Airthings Consumer API](https://consumer-api-doc.airthings.com/).
 
 ## Requirements
 
@@ -63,8 +61,8 @@ Field           	             | Description
 -------------------------------|------------
 **accessory**   	             | (required) Must be "Airthings"
 **name**					             | (required) Name for the device in HomeKit
-**clientId**			             | (required) API Client ID generated in the [Airthings Dashboard](https://dashboard.airthings.com)
-**clientSecret**	             | (required) API Client Secret generated in the [Airthings Dashboard](https://dashboard.airthings.com)
+**clientId**			             | (required) Client ID generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
+**clientSecret**	             | (required) Client Secret generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
 **serialNumber**	             | (required) Serial number of the device
 **co2AirQualityDisabled**      | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
 **humidityAirQualityDisabled** | (optional) Disable Humidity in Air Quality sensor calculation. default is false
@@ -79,14 +77,7 @@ Field           	             | Description
 
 ### How to request an Airthings API Client ID & Secret
 
-1. Login to the [Airthings Dashboard](https://dashboard.airthings.com)
-2. Navigate to *Integrations*, then *API*, then *Request API Client*
-3. Create a new API Client with the following configuration:
-    * Name: Homebridge
-    * Resource Scope: read:device:current_values
-    * Access Type: confidential
-    * Flow Type: Client Credentials (machine-to-machine)
-    * Enable: On
+Login to the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard) and go to *Create New Application*.
 
 ## HomeKit Sensors
 
