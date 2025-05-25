@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "homebridge",
+            "preLaunchTask": "npm: build",
+            "command": "npm run homebridge",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        }
+    ]
+}
