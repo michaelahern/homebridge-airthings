@@ -32,9 +32,9 @@
     "url": "git://github.com/michaelahern/homebridge-airthings.git"
   },
   "scripts": {
-    "build": "npm run clean && npm run lint && tsc",
+    "build": "npm run clean && npm run lint && tsc && npm link",
     "clean": "rimraf ./dist",
-    "homebridge": "npm run build && npm link && homebridge -C -D -I 2>&1 | tee ~/.homebridge/homebridge.log",
+    "homebridge": "homebridge -C -D -I 2>&1 | tee ~/.homebridge/homebridge.log",
     "lint": "eslint src/**/*.ts --max-warnings=0",
     "lint-fix": "eslint src/**/*.ts --max-warnings=0 --fix",
     "prepublishOnly": "npm run build"
