@@ -17,5 +17,8 @@ export default tseslint.config(
         semi: true
     }),
     ...tseslint.configs.strict,
-    ...tseslint.configs.stylistic
+    ...tseslint.configs.stylistic,
+    {
+        ignores: ['./dist']
+    }
 );
