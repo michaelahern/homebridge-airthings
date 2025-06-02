@@ -1,13 +1,15 @@
 {
   "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22",
-  "onCreateCommand": {
-    "homebridge-install": "sudo npm install -g --unsafe-perm homebridge homebridge-config-ui-x"
-  },
   "updateContentCommand": {
+    "homebridge-install": "npm install -g homebridge homebridge-config-ui-x",
     "npm-install": "npm install"
   },
   "postCreateCommand": {
     "homebridge-config": ".devcontainer/postcreate.sh"
+  },
+  "postStartCommand": {
+    "npm-build": "npm run build",
+    "npm-link": "npm link"
   },
   "portsAttributes": {
     "8581": {
