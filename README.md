@@ -2,7 +2,7 @@
 
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![npm](https://badgen.net/npm/v/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
-[![node](https://badgen.net/npm/node/homebridge-wattbox-ip)](https://www.npmjs.com/package/homebridge-wattbox-ip)
+[![node](https://badgen.net/npm/node/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
 [![downloads](https://badgen.net/npm/dt/homebridge-airthings)](https://www.npmjs.com/package/homebridge-airthings)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/michaelahern/homebridge-airthings)
 
@@ -12,14 +12,13 @@ A [Homebridge](https://homebridge.io) plugin for [Airthings](https://www.airthin
 
  * [Homebridge](https://homebridge.io/)
  * One or more supported [Airthings](https://www.airthings.com/) air quality monitors
- * At least one Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub), [View Plus](https://www.airthings.com/view-plus), [View Pollution](https://www.airthings.com/view-pollution), [View Radon](https://www.airthings.com/view-radon))
+ * At least one Airthings SmartLink Hub ([View Plus](https://www.airthings.com/view-plus), [View Radon](https://www.airthings.com/view-radon))
 
 ### Supported Devices
 
 | Airthings Device                                                     | Serial Number |
 | -------------------------------------------------------------------- | ------------- |
 | [Airthings View Plus](https://www.airthings.com/view-plus)           | 2960xxxxxx    |
-| [Airthings View Pollution](https://www.airthings.com/view-pollution) | 2980xxxxxx    |
 | [Airthings View Radon](https://www.airthings.com/view-radon)         | 2989xxxxxx    |
 | [Airthings Wave Enhance](https://www.airthings.com/wave-enhance)     | 3210xxxxxx    |
 | [Airthings Wave Enhance](https://www.airthings.com/wave-enhance)     | 3220xxxxxx    |
@@ -27,7 +26,7 @@ A [Homebridge](https://homebridge.io) plugin for [Airthings](https://www.airthin
 | [Airthings Wave Radon](https://www.airthings.com/wave-radon)         | 2950xxxxxx    |
 | [Airthings Wave Mini](https://www.airthings.com/wave-mini)           | 2920xxxxxx    |
 
-Note: Airthings Wave devices require an Airthings SmartLink Hub ([Hub](https://www.airthings.com/hub) or [View Series](https://www.airthings.com/for-home) device) to continuously push measurement data to the Airthings Cloud.
+Note: Airthings Wave devices require an Airthings SmartLink Hub ([View Plus](https://www.airthings.com/view-plus), [View Radon](https://www.airthings.com/view-radon)) to continuously push measurement data to the Airthings Cloud.
 
 ## Configuration
 
