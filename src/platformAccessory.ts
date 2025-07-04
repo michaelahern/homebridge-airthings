@@ -1,13 +1,20 @@
 import { AirthingsClient, SensorResult, SensorUnits } from 'airthings-consumer-api';
-import { AccessoryConfig, AccessoryPlugin, API, Formats, Logging, Perms, Service } from 'homebridge';
+import { API, Formats, Logger, Perms, PlatformAccessory, Service } from 'homebridge';
 
+import { AirthingsDeviceConfig } from './config.js';
 import { AirthingsDeviceInfo, getAirthingsDeviceInfoBySerialNumber } from './device.js';
+import { AirthingsPlatform } from './platform.js';
 
-export class AirthingsPlugin implements AccessoryPlugin {
-    private readonly log: Logging;
+/**
+ * Platform Accessory
+ * An instance of this class is created for each accessory your platform registers
+ * Each accessory may expose multiple services of different service types.
+ */
+export class AirthingsPlatformAccessory {
+    private readonly log: Logger;
 
     private readonly airthingsClient: AirthingsClient;
-    private readonly airthingsConfig: AirthingsPluginConfig;
+    private readonly airthingsConfig: AirthingsDeviceConfig;
     private readonly airthingsDevice: AirthingsDeviceInfo;
 
     private readonly informationService: Service;
@@ -24,143 +31,137 @@ export class AirthingsPlugin implements AccessoryPlugin {
         sensors: []
     };
 
-    constructor(log: Logging, config: AirthingsPluginConfig, api: API) {
-        this.log = log;
+    constructor(
+        private readonly platform: AirthingsPlatform,
+        private readonly accessory: PlatformAccessory
+    ) {
+        this.log = this.platform.log;
 
-        if (!config.clientId) {
+        // Get device config from accessory context
+        this.airthingsConfig = this.accessory.context.device;
+
+        if (!this.platform.config.clientId) {
             this.log.error('Missing required config value: clientId');
         }
 
-        if (!config.clientSecret) {
+        if (!this.platform.config.clientSecret) {
             this.log.error('Missing required config value: clientSecret');
         }
 
-        if (!config.serialNumber) {
+        if (!this.airthingsConfig.serialNumber) {
             this.log.error('Missing required config value: serialNumber');
-            config.serialNumber = '0000000000';
+            this.airthingsConfig.serialNumber = '0000000000';
         }
 
-        if (!config.co2DetectedThreshold) {
-            config.co2DetectedThreshold = 1000;
+        if (!this.airthingsConfig.co2DetectedThreshold) {
+            this.airthingsConfig.co2DetectedThreshold = 1000;
         }
 
-        if (!Number.isSafeInteger(config.co2DetectedThreshold)) {
+        if (!Number.isSafeInteger(this.airthingsConfig.co2DetectedThreshold)) {
             this.log.warn('Invalid config value: co2DetectedThreshold (not a valid integer)');
-            config.co2DetectedThreshold = 1000;
+            this.airthingsConfig.co2DetectedThreshold = 1000;
         }
 
-        if (config.radonLeakThreshold && !Number.isSafeInteger(config.radonLeakThreshold)) {
-            this.log.warn('Invalid config value: radonLeakThreshold (not a valid integer)');
-            config.radonLeakThreshold = undefined;
+        if (!this.airthingsConfig.refreshInterval) {
+            this.airthingsConfig.refreshInterval = 150;
         }
 
-        if (!config.debug) {
-            config.debug = false;
-        }
-
-        if (!config.refreshInterval) {
-            config.refreshInterval = 150;
-        }
-
-        if (!Number.isSafeInteger(config.refreshInterval)) {
+        if (!Number.isSafeInteger(this.airthingsConfig.refreshInterval)) {
             this.log.warn('Invalid config value: refreshInterval (not a valid integer)');
-            config.refreshInterval = 150;
+            this.airthingsConfig.refreshInterval = 150;
         }
 
-        if (config.refreshInterval < 60) {
-            this.log.warn('Invalid config value: refreshInterval (<60s may cause rate limiting)');
-            config.refreshInterval = 60;
-        }
-
+        this.airthingsDevice = getAirthingsDeviceInfoBySerialNumber(this.airthingsConfig.serialNumber);
         this.airthingsClient = new AirthingsClient({
-            clientId: config.clientId ?? '',
-            clientSecret: config.clientSecret ?? ''
+            clientId: this.platform.config.clientId,
+            clientSecret: this.platform.config.clientSecret
         });
-        this.airthingsConfig = config;
-        this.airthingsDevice = getAirthingsDeviceInfoBySerialNumber(config.serialNumber);
 
-        this.log.info(`Device Model: ${this.airthingsDevice.model}`);
-        this.log.info(`Serial Number: ${this.airthingsConfig.serialNumber}`);
+        this.log.info('Device Settings:');
+        this.log.info(` * Name: ${this.airthingsConfig.name}`);
+        this.log.info(` * Model: ${this.airthingsDevice.model}`);
+        this.log.info(` * Serial Number: ${this.airthingsConfig.serialNumber}`);
 
-        this.log.info('Sensor Settings:');
-        this.log.info(` * CO₂ Detected Threshold: ${this.airthingsConfig.co2DetectedThreshold} ppm`);
-        this.log.info(` * Radon Leak Sensor: ${this.airthingsDevice.sensors.radonShortTermAvg ? (this.airthingsConfig.radonLeakThreshold ? 'Enabled' : 'Disabled') : 'Not Supported'}`);
-        if (this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold) {
-            this.log.info(` * Radon Leak Threshold: ${this.airthingsConfig.radonLeakThreshold} Bq/m³`);
-        }
+        this.log.info('Enabled Sensors:');
+        this.log.info(` * Air Quality: true`);
+        this.log.info(` * Battery: ${!this.airthingsConfig.batteryDisabled}`);
+        this.log.info(` * Temperature: ${this.airthingsDevice.sensors.temp}`);
+        this.log.info(` * Humidity: ${this.airthingsDevice.sensors.humidity}`);
+        this.log.info(` * CO2: ${this.airthingsDevice.sensors.co2}`);
+        this.log.info(` * Air Pressure: ${this.airthingsDevice.sensors.pressure}`);
+        this.log.info(` * Radon: ${this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold != undefined}`);
 
         this.log.info('Advanced Settings:');
-        this.log.info(` * Debug Logging: ${this.airthingsConfig.debug}`);
+        this.log.info(` * Debug Logging: ${this.platform.config.debug}`);
         this.log.info(` * Refresh Interval: ${this.airthingsConfig.refreshInterval}s`);
 
-        // HomeKit Accessory Information Service
-        this.informationService = new api.hap.Service.AccessoryInformation()
-            .setCharacteristic(api.hap.Characteristic.Manufacturer, 'Airthings')
-            .setCharacteristic(api.hap.Characteristic.Model, this.airthingsDevice.model)
-            .setCharacteristic(api.hap.Characteristic.Name, config.name)
-            .setCharacteristic(api.hap.Characteristic.SerialNumber, config.serialNumber)
-            .setCharacteristic(api.hap.Characteristic.FirmwareRevision, 'Unknown');
+        // Set accessory information
+        this.informationService = this.accessory.getService(this.platform.api.hap.Service.AccessoryInformation)
+            || this.accessory.addService(this.platform.api.hap.Service.AccessoryInformation);
+
+        this.informationService
+            .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, 'Airthings')
+            .setCharacteristic(this.platform.api.hap.Characteristic.Model, this.airthingsDevice.model)
+            .setCharacteristic(this.platform.api.hap.Characteristic.Name, this.airthingsConfig.name)
+            .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, this.airthingsConfig.serialNumber)
+            .setCharacteristic(this.platform.api.hap.Characteristic.FirmwareRevision, 'Unknown');
 
         // HomeKit Battery Service
-        this.batteryService = new api.hap.Service.Battery('Battery');
+        this.batteryService = this.accessory.getService(this.platform.api.hap.Service.Battery)
+            || this.accessory.addService(this.platform.api.hap.Service.Battery, 'Battery');
 
         // HomeKit Air Quality Service
-        this.airQualityService = new api.hap.Service.AirQualitySensor('Air Quality');
+        this.airQualityService = this.accessory.getService(this.platform.api.hap.Service.AirQualitySensor)
+            || this.accessory.addService(this.platform.api.hap.Service.AirQualitySensor, 'Air Quality');
 
         if (this.airthingsDevice.sensors.co2 && !this.airthingsConfig.co2AirQualityDisabled) {
-            this.airQualityService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).setProps({});
+            this.airQualityService.getCharacteristic(this.platform.api.hap.Characteristic.CarbonDioxideLevel).setProps({});
         }
 
         if (this.airthingsDevice.sensors.humidity && !this.airthingsConfig.humidityAirQualityDisabled) {
-            this.airQualityService.getCharacteristic(api.hap.Characteristic.CurrentRelativeHumidity).setProps({});
+            this.airQualityService.getCharacteristic(this.platform.api.hap.Characteristic.CurrentRelativeHumidity).setProps({});
         }
 
         if (this.airthingsDevice.sensors.pm25 && !this.airthingsConfig.pm25AirQualityDisabled) {
-            this.airQualityService.getCharacteristic(api.hap.Characteristic.PM2_5Density).setProps({
+            this.airQualityService.getCharacteristic(this.platform.api.hap.Characteristic.PM2_5Density).setProps({
                 unit: 'µg/m³'
             });
         }
 
         if (this.airthingsDevice.sensors.radonShortTermAvg && !this.airthingsConfig.radonAirQualityDisabled) {
-            this.airQualityService.addCharacteristic(new api.hap.Characteristic('Radon', 'B42E01AA-ADE7-11E4-89D3-123B93F75CBA', {
-                format: Formats.UINT16,
+            this.airQualityService.addCharacteristic(new this.platform.api.hap.Characteristic('Radon', 'e963f10f-079e-48ff-8f27-9c2605a29f52', {
+                format: Formats.FLOAT,
                 perms: [Perms.NOTIFY, Perms.PAIRED_READ],
                 unit: 'Bq/m³',
                 minValue: 0,
-                maxValue: 65535,
+                maxValue: 16383,
                 minStep: 1
             }));
         }
 
         if (this.airthingsDevice.sensors.voc && !this.airthingsConfig.vocAirQualityDisabled) {
-            this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity).setProps({
-                unit: 'µg/m³',
-                maxValue: 65535
+            this.airQualityService.getCharacteristic(this.platform.api.hap.Characteristic.VOCDensity)?.setProps({
+                unit: 'µg/m³'
             });
-
-            this.airQualityService.addCharacteristic(new api.hap.Characteristic('VOC Density (ppb)', 'E5B6DA60-E041-472A-BE2B-8318B8A724C5', {
-                format: Formats.UINT16,
-                perms: [Perms.NOTIFY, Perms.PAIRED_READ],
-                unit: 'ppb',
-                minValue: 0,
-                maxValue: 65535,
-                minStep: 1
-            }));
         }
 
         // HomeKit Temperature Service
-        this.temperatureService = new api.hap.Service.TemperatureSensor('Temp');
+        this.temperatureService = this.accessory.getService(this.platform.api.hap.Service.TemperatureSensor)
+            || this.accessory.addService(this.platform.api.hap.Service.TemperatureSensor, 'Temperature');
 
         // HomeKit Humidity Service
-        this.humidityService = new api.hap.Service.HumiditySensor('Humidity');
+        this.humidityService = this.accessory.getService(this.platform.api.hap.Service.HumiditySensor)
+            || this.accessory.addService(this.platform.api.hap.Service.HumiditySensor, 'Humidity');
 
         // HomeKit CO2 Service
-        this.carbonDioxideService = new api.hap.Service.CarbonDioxideSensor('CO2');
+        this.carbonDioxideService = this.accessory.getService(this.platform.api.hap.Service.CarbonDioxideSensor)
+            || this.accessory.addService(this.platform.api.hap.Service.CarbonDioxideSensor, 'CO2');
 
         // Eve Air Pressure Service
-        this.airPressureService = new api.hap.Service('Air Pressure', 'e863f00a-079e-48ff-8f27-9c2605a29f52');
+        this.airPressureService = this.accessory.getService('Air Pressure')
+            || this.accessory.addService(new this.platform.api.hap.Service('Air Pressure', 'e863f00a-079e-48ff-8f27-9c2605a29f52'));
 
-        this.airPressureService.addCharacteristic(new api.hap.Characteristic('Air Pressure', 'e863f10f-079e-48ff-8f27-9c2605a29f52', {
+        this.airPressureService.addCharacteristic(new this.platform.api.hap.Characteristic('Air Pressure', 'e863f10f-079e-48ff-8f27-9c2605a29f52', {
             format: Formats.UINT16,
             perms: [Perms.NOTIFY, Perms.PAIRED_READ],
             unit: 'mBar',
@@ -169,15 +170,16 @@ export class AirthingsPlugin implements AccessoryPlugin {
             minStep: 1
         }));
 
-        this.airPressureService.addCharacteristic(api.hap.Characteristic.StatusActive);
+        this.airPressureService.addCharacteristic(this.platform.api.hap.Characteristic.StatusActive);
 
         // HomeKit Radon (Leak) Service
-        this.radonService = new api.hap.Service.LeakSensor('Radon');
+        this.radonService = this.accessory.getService(this.platform.api.hap.Service.LeakSensor)
+            || this.accessory.addService(this.platform.api.hap.Service.LeakSensor, 'Radon');
 
-        this.refreshCharacteristics(api);
+        this.refreshCharacteristics(this.platform.api);
         setInterval(async () => {
-            await this.refreshCharacteristics(api);
-        }, config.refreshInterval * 1000);
+            await this.refreshCharacteristics(this.platform.api);
+        }, (this.airthingsConfig.refreshInterval || 150) * 1000);
     }
 
     getServices(): Service[] {
@@ -225,7 +227,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
 
             this.lastSensorResult = sensorResults.results[0];
 
-            if (this.airthingsConfig.debug) {
+            if (this.platform.config.debug) {
                 this.log.info(JSON.stringify(this.lastSensorResult));
             }
         }
@@ -252,6 +254,9 @@ export class AirthingsPlugin implements AccessoryPlugin {
         // HomeKit Battery Service
         if (this.lastSensorResult.batteryPercentage) {
             this.batteryService.getCharacteristic(api.hap.Characteristic.BatteryLevel).updateValue(this.lastSensorResult.batteryPercentage);
+            this.batteryService.getCharacteristic(api.hap.Characteristic.ChargingState).updateValue(
+                api.hap.Characteristic.ChargingState.NOT_CHARGEABLE
+            );
             this.batteryService.getCharacteristic(api.hap.Characteristic.StatusLowBattery).updateValue(
                 this.lastSensorResult.batteryPercentage > 10
                     ? api.hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
@@ -284,7 +289,6 @@ export class AirthingsPlugin implements AccessoryPlugin {
             this.airQualityService.getCharacteristic(api.hap.Characteristic.VOCDensity)?.updateValue(
                 vocSensor.value * 2.2727
             );
-            this.airQualityService.getCharacteristic('VOC Density (ppb)')?.updateValue(vocSensor.value);
         }
 
         this.airQualityService.getCharacteristic(api.hap.Characteristic.StatusActive).updateValue(
@@ -360,50 +364,23 @@ export class AirthingsPlugin implements AccessoryPlugin {
         let aq = api.hap.Characteristic.AirQuality.UNKNOWN;
 
         const co2Sensor = lastResult.sensors.find(x => x.sensorType === 'co2');
-        if (co2Sensor && !this.airthingsConfig.co2AirQualityDisabled) {
-            if (co2Sensor.value >= 1000) {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
-            }
-            else if (co2Sensor.value >= 800) {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
-            }
-            else {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
-            }
-        }
-
         const humiditySensor = lastResult.sensors.find(x => x.sensorType === 'humidity');
-        if (humiditySensor && !this.airthingsConfig.humidityAirQualityDisabled) {
-            if (humiditySensor.value < 25 || humiditySensor.value >= 70) {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
-            }
-            else if (humiditySensor.value < 30 || humiditySensor.value >= 60) {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
-            }
-            else {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
-            }
-        }
-
         const pm25Sensor = lastResult.sensors.find(x => x.sensorType === 'pm25');
-        if (pm25Sensor && !this.airthingsConfig.pm25AirQualityDisabled) {
-            if (pm25Sensor.value >= 25) {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
-            }
-            else if (pm25Sensor.value >= 10) {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
-            }
-            else {
-                aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
-            }
-        }
-
         const radonShortTermAvgSensor = lastResult.sensors.find(x => x.sensorType === 'radonShortTermAvg');
-        if (radonShortTermAvgSensor && !this.airthingsConfig.radonAirQualityDisabled) {
-            if (radonShortTermAvgSensor.value >= 150) {
+        const vocSensor = lastResult.sensors.find(x => x.sensorType === 'voc');
+
+        if (lastResult.sensors.length > 0) {
+            aq = api.hap.Characteristic.AirQuality.EXCELLENT;
+        }
+
+        if (co2Sensor && !this.airthingsConfig.co2AirQualityDisabled) {
+            if (co2Sensor.value > 5000) {
                 aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
             }
-            else if (radonShortTermAvgSensor.value >= 100) {
+            else if (co2Sensor.value > 2000) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.INFERIOR);
+            }
+            else if (co2Sensor.value > 1000) {
                 aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
             }
             else {
@@ -411,12 +388,59 @@ export class AirthingsPlugin implements AccessoryPlugin {
             }
         }
 
-        const vocSensor = lastResult.sensors.find(x => x.sensorType === 'voc');
-        if (vocSensor && !this.airthingsConfig.vocAirQualityDisabled) {
-            if (vocSensor.value >= 2000) {
+        if (humiditySensor && !this.airthingsConfig.humidityAirQualityDisabled) {
+            if (humiditySensor.value > 70 || humiditySensor.value < 25) {
                 aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
             }
-            else if (vocSensor.value >= 250) {
+            else if (humiditySensor.value > 65 || humiditySensor.value < 30) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.INFERIOR);
+            }
+            else if (humiditySensor.value > 60 || humiditySensor.value < 35) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
+            }
+            else {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
+            }
+        }
+
+        if (pm25Sensor && !this.airthingsConfig.pm25AirQualityDisabled) {
+            if (pm25Sensor.value > 250) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
+            }
+            else if (pm25Sensor.value > 150) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.INFERIOR);
+            }
+            else if (pm25Sensor.value > 55) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
+            }
+            else {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
+            }
+        }
+
+        if (radonShortTermAvgSensor && !this.airthingsConfig.radonAirQualityDisabled) {
+            if (radonShortTermAvgSensor.value > 600) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
+            }
+            else if (radonShortTermAvgSensor.value > 300) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.INFERIOR);
+            }
+            else if (radonShortTermAvgSensor.value > 150) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
+            }
+            else {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.GOOD);
+            }
+        }
+
+        if (vocSensor && !this.airthingsConfig.vocAirQualityDisabled) {
+            if (vocSensor.value > 2000) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.POOR);
+            }
+            else if (vocSensor.value > 250) {
+                aq = Math.max(aq, api.hap.Characteristic.AirQuality.INFERIOR);
+            }
+            else if (vocSensor.value > 125) {
                 aq = Math.max(aq, api.hap.Characteristic.AirQuality.FAIR);
             }
             else {
@@ -428,18 +452,6 @@ export class AirthingsPlugin implements AccessoryPlugin {
     }
 }
 
-interface AirthingsPluginConfig extends AccessoryConfig {
-    clientId?: string;
-    clientSecret?: string;
-    serialNumber?: string;
-    batteryDisabled?: boolean;
-    co2AirQualityDisabled?: boolean;
-    humidityAirQualityDisabled?: boolean;
-    pm25AirQualityDisabled?: boolean;
-    radonAirQualityDisabled?: boolean;
-    vocAirQualityDisabled?: boolean;
-    co2DetectedThreshold?: number;
-    radonLeakThreshold?: number;
-    debug?: boolean;
-    refreshInterval?: number;
+export interface AirthingsPlatformAccessoryContext {
+    device: AirthingsDeviceConfig;
 }

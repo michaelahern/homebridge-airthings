@@ -30,49 +30,63 @@ Note: Airthings Wave devices require an Airthings SmartLink Hub ([View Plus](htt
 
 ## Configuration
 
-Example accessory config in the Homebridge config.json:
+Example platform config in the Homebridge config.json:
 
 ```json
-"accessories": [
+"platforms": [
   {
-    "accessory": "Airthings",
-    "name": "Living Room Airthings View Plus",
+    "platform": "Airthings",
+    "name": "Airthings",
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
-    "serialNumber": "2960123456",
-    "batteryDisabled": false,
-    "co2AirQualityDisabled": false,
-    "humidityAirQualityDisabled": false,
-    "pm25AirQualityDisabled": false,
-    "radonAirQualityDisabled": false,
-    "vocAirQualityDisabled": false,
-    "co2DetectedThreshold": 1000,
-    "radonLeakThreshold": 100,
-    "debug": false,
-    "refreshInterval": 150
+    "devices": [
+      {
+        "name": "Living Room Airthings View Plus",
+        "serialNumber": "2960123456",
+        "batteryDisabled": false,
+        "co2AirQualityDisabled": false,
+        "humidityAirQualityDisabled": false,
+        "pm25AirQualityDisabled": false,
+        "radonAirQualityDisabled": false,
+        "vocAirQualityDisabled": false,
+        "co2DetectedThreshold": 1000,
+        "radonLeakThreshold": 100,
+        "refreshInterval": 150
+      },
+      {
+        "name": "Bedroom Airthings Wave Mini",
+        "serialNumber": "2920654321",
+        "batteryDisabled": false,
+        "refreshInterval": 150
+      }
+    ],
+    "debug": false
   }
 ]
 ```
 
 ### Configuration Details
 
-Field                          | Description
--------------------------------|------------
-**accessory**                  | (required) Must be "Airthings"
-**name**                       | (required) Name for the device in HomeKit
-**clientId**                   | (required) Client ID generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
-**clientSecret**               | (required) Client Secret generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
-**serialNumber**               | (required) Serial number of the device
-**co2AirQualityDisabled**      | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
-**humidityAirQualityDisabled** | (optional) Disable Humidity in Air Quality sensor calculation. default is false
-**pm25AirQualityDisabled**     | (optional) Disable Particulate Matter (PM2.5) in Air Quality sensor calculation, default is false
-**radonAirQualityDisabled**    | (optional) Disable Radon in Air Quality sensor calculation, default is false
-**vocAirQualityDisabled**      | (optional) Disable VOC in Air Quality sensor calculation, default is false
-**co2DetectedThreshold**       | (optional) Configure a custom Carbon Dioxide (CO₂) detected threshold, default is 1000 ppm
-**radonLeakThreshold**         | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
-**debug**                      | (optional) Enable debug logging, disabled by default
-**batteryDisabled**            | (optional) Disable Battery Service, default is false
-**refreshInterval**            | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
+Field                                      | Description
+-------------------------------------------|------------
+**platform**                              | (required) Must be "Airthings"
+**name**                                   | (optional) Platform name for Homebridge, default is "Airthings"
+**clientId**                               | (required) Client ID generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
+**clientSecret**                           | (required) Client Secret generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
+**devices**                                | (required) Array of Airthings devices to add to HomeKit
+**devices[].name**                         | (required) Name for the device in HomeKit
+**devices[].serialNumber**                 | (required) Serial number of the device
+**devices[].co2AirQualityDisabled**        | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
+**devices[].humidityAirQualityDisabled**   | (optional) Disable Humidity in Air Quality sensor calculation. default is false
+**devices[].pm25AirQualityDisabled**       | (optional) Disable Particulate Matter (PM2.5) in Air Quality sensor calculation, default is false
+**devices[].radonAirQualityDisabled**      | (optional) Disable Radon in Air Quality sensor calculation, default is false
+**devices[].vocAirQualityDisabled**        | (optional) Disable VOC in Air Quality sensor calculation, default is false
+**devices[].co2DetectedThreshold**         | (optional) Configure a custom Carbon Dioxide (CO₂) detected threshold, default is 1000 ppm
+**devices[].radonLeakThreshold**           | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
+**devices[].batteryDisabled**              | (optional) Disable Battery Service, default is false
+**devices[].refreshInterval**              | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
+**debug**                                  | (optional) Enable debug logging, disabled by default
+
 
 ### How to request an Airthings API Client ID & Secret
 

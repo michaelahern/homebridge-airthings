@@ -1,15 +1,16 @@
 {
   "pluginAlias": "Airthings",
-  "pluginType": "accessory",
+  "pluginType": "platform",
+  "singular": true,
   "footerDisplay": "Generating a Client ID & Secret: [Airthings Dashboard](https://dashboard.airthings.com) -> Integrations -> Request API Client",
   "schema": {
     "type": "object",
     "properties": {
       "name": {
-        "title": "Name",
+        "title": "Platform Name",
         "type": "string",
-        "required": true,
-        "default": "Airthings Device"
+        "required": false,
+        "default": "Airthings"
       },
       "clientId": {
         "title": "Client ID",
@@ -21,62 +22,78 @@
         "type": "string",
         "required": true
       },
-      "serialNumber": {
-        "title": "Serial Number",
-        "type": "string",
-        "required": true
-      },
-      "co2AirQualityDisabled": {
-        "title": "CO₂ Disabled in Air Quality Sensor",
-        "type": "boolean",
-        "required": false
-      },
-      "humidityAirQualityDisabled": {
-        "title": "Humidity Disabled in Air Quality Sensor",
-        "type": "boolean",
-        "required": false
-      },
-      "pm25AirQualityDisabled": {
-        "title": "PM2.5 Disabled in Air Quality Sensor",
-        "type": "boolean",
-        "required": false
-      },
-      "radonAirQualityDisabled": {
-        "title": "Radon Disabled in Air Quality Sensor",
-        "type": "boolean",
-        "required": false
-      },
-      "vocAirQualityDisabled": {
-        "title": "VOC Disabled in Air Quality Sensor",
-        "type": "boolean",
-        "required": false
-      },
-      "co2DetectedThreshold": {
-        "title": "CO₂ Detected Threshold (ppm)",
-        "type": "number",
-        "required": false,
-        "placeholder": 1000
-      },
-      "radonLeakThreshold": {
-        "title": "Radon Leak Threshold (Bq/m³)",
-        "type": "number",
-        "required": false
+      "devices": {
+        "type": "array",
+        "title": "Airthings Devices",
+        "items": {
+          "type": "object",
+          "title": "Airthings Device",
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string",
+              "required": true,
+              "default": "Airthings Device"
+            },
+            "serialNumber": {
+              "title": "Serial Number",
+              "type": "string",
+              "required": true
+            },
+            "co2AirQualityDisabled": {
+              "title": "CO₂ Disabled in Air Quality Sensor",
+              "type": "boolean",
+              "required": false
+            },
+            "humidityAirQualityDisabled": {
+              "title": "Humidity Disabled in Air Quality Sensor",
+              "type": "boolean",
+              "required": false
+            },
+            "pm25AirQualityDisabled": {
+              "title": "PM2.5 Disabled in Air Quality Sensor",
+              "type": "boolean",
+              "required": false
+            },
+            "radonAirQualityDisabled": {
+              "title": "Radon Disabled in Air Quality Sensor",
+              "type": "boolean",
+              "required": false
+            },
+            "vocAirQualityDisabled": {
+              "title": "VOC Disabled in Air Quality Sensor",
+              "type": "boolean",
+              "required": false
+            },
+            "co2DetectedThreshold": {
+              "title": "CO₂ Detected Threshold (ppm)",
+              "type": "number",
+              "required": false,
+              "placeholder": 1000
+            },
+            "radonLeakThreshold": {
+              "title": "Radon Leak Threshold (Bq/m³)",
+              "type": "number",
+              "required": false
+            },
+            "batteryDisabled": {
+              "title": "Battery Service Disabled",
+              "type": "boolean",
+              "required": false
+            },
+            "refreshInterval": {
+              "title": "Refresh Interval (seconds)",
+              "type": "number",
+              "required": false,
+              "placeholder": 150
+            }
+          }
+        }
       },
       "debug": {
         "title": "Debug Logging",
         "type": "boolean",
         "required": false
-      },
-      "batteryDisabled": {
-        "title": "Battery Service Disabled",
-        "type": "boolean",
-        "required": false
-      },
-      "refreshInterval": {
-        "title": "Airthings API Refresh Interval (seconds)",
-        "type": "number",
-        "required": false,
-        "placeholder": 150
       }
     }
   },
@@ -91,27 +108,50 @@
           "items": [
             "name",
             "clientId",
-            "clientSecret",
-            "serialNumber"
+            "clientSecret"
           ]
         }
       ]
     },
     {
       "type": "section",
-      "title": "Sensor Settings (Optional)",
+      "title": "Devices",
       "expandable": true,
-      "expanded": false,
+      "expanded": true,
       "items": [
         {
+          "key": "devices",
+          "type": "array",
+          "orderable": false,
+          "buttonText": "Add Airthings Device",
           "items": [
-            "co2AirQualityDisabled",
-            "humidityAirQualityDisabled",
-            "pm25AirQualityDisabled",
-            "radonAirQualityDisabled",
-            "vocAirQualityDisabled",
-            "co2DetectedThreshold",
-            "radonLeakThreshold"
+            "devices[].name",
+            "devices[].serialNumber",
+            {
+              "type": "section",
+              "title": "Sensor Settings (Optional)",
+              "expandable": true,
+              "expanded": false,
+              "items": [
+                "devices[].co2AirQualityDisabled",
+                "devices[].humidityAirQualityDisabled",
+                "devices[].pm25AirQualityDisabled",
+                "devices[].radonAirQualityDisabled",
+                "devices[].vocAirQualityDisabled",
+                "devices[].co2DetectedThreshold",
+                "devices[].radonLeakThreshold"
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Advanced Settings (Optional)",
+              "expandable": true,
+              "expanded": false,
+              "items": [
+                "devices[].batteryDisabled",
+                "devices[].refreshInterval"
+              ]
+            }
           ]
         }
       ]
@@ -124,9 +164,7 @@
       "items": [
         {
           "items": [
-            "debug",
-            "batteryDisabled",
-            "refreshInterval"
+            "debug"
           ]
         }
       ]
