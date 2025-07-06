@@ -1,7 +1,7 @@
 {
-    "recommendations": [
-        "bierner.markdown-preview-github-styles",
-        "dbaeumer.vscode-eslint",
-        "github.vscode-github-actions"
-    ]
+  "recommendations": [
+    "bierner.markdown-preview-github-styles",
+    "dbaeumer.vscode-eslint",
+    "github.vscode-github-actions"
+  ]
 }
