@@ -2,7 +2,7 @@
   "name": "homebridge-airthings",
   "displayName": "Homebridge Airthings",
   "version": "2.0.0",
-  "description": "A Homebridge plugin for Airthings air quality monitors via the Airthings Consumer API.",
+  "description": "A Homebridge plugin for Airthings Air Quality Monitors via the Airthings Consumer API.",
   "keywords": [
     "airthings",
     "homebridge",
@@ -35,17 +35,21 @@
     "build": "npm run lint && tsc",
     "clean": "rimraf ./dist",
     "homebridge": "homebridge -C -D -I 2>&1 | tee ~/.homebridge/homebridge.log",
-    "lint": "eslint src/**/*.ts --max-warnings=0",
-    "lint-fix": "eslint src/**/*.ts --max-warnings=0 --fix",
+    "lint": "eslint --max-warnings=0",
+    "lint-fix": "eslint --max-warnings=0 --fix",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "airthings-consumer-api": "^1"
   },
   "devDependencies": {
+    "@eslint/json": "^0",
+    "@eslint/markdown": "^6",
     "@stylistic/eslint-plugin": "^5",
     "@types/node": "^20",
     "eslint": "^9",
+    "eslint-plugin-jsonc": "^2",
+    "eslint-plugin-yml": "^1",
     "homebridge": "~1.10",
     "rimraf": "^6",
     "typescript": "~5.8",
