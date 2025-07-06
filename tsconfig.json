@@ -8,7 +8,8 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "strict": true
+    "strict": true,
+    "verbatimModuleSyntax": false
   },
   "include": [
     "./src/**/*"
