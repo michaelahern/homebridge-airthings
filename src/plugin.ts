@@ -223,10 +223,12 @@ export class AirthingsPlugin implements AccessoryPlugin {
                 return;
             }
 
-            this.lastSensorResult = sensorResults.results[0];
+            if (sensorResults.results[0] !== undefined) {
+                this.lastSensorResult = sensorResults.results[0];
 
-            if (this.airthingsConfig.debug) {
-                this.log.info(JSON.stringify(this.lastSensorResult));
+                if (this.airthingsConfig.debug) {
+                    this.log.info(JSON.stringify(this.lastSensorResult));
+                }
             }
         }
         catch (err) {
@@ -439,7 +441,7 @@ interface AirthingsPluginConfig extends AccessoryConfig {
     radonAirQualityDisabled?: boolean;
     vocAirQualityDisabled?: boolean;
     co2DetectedThreshold?: number;
-    radonLeakThreshold?: number;
+    radonLeakThreshold?: number | undefined;
     debug?: boolean;
     refreshInterval?: number;
 }
