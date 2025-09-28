@@ -223,7 +223,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
                 return;
             }
 
-            if (sensorResults.results[0] !== undefined) {
+            if (sensorResults.results[0]) {
                 this.lastSensorResult = sensorResults.results[0];
 
                 if (this.airthingsConfig.debug) {
