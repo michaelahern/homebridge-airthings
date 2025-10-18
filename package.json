@@ -34,7 +34,7 @@
   "scripts": {
     "build": "npm run lint && tsc",
     "clean": "rimraf ./dist",
-    "homebridge": "homebridge -C -D -I 2>&1 | tee ~/.homebridge/homebridge.log",
+    "homebridge": "hb-service run --user-storage-path ~/.homebridge",
     "lint": "eslint --max-warnings=0",
     "lint-fix": "eslint --max-warnings=0 --fix",
     "prepublishOnly": "npm run build"
