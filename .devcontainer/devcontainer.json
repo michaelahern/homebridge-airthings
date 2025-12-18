@@ -10,7 +10,7 @@
     }
   },
   "updateContentCommand": {
-    "homebridge-install": "npm install -g homebridge@1.11.0 homebridge-config-ui-x@5.8.0",
+    "homebridge-install": "npm install -g homebridge@1.11.1 homebridge-config-ui-x@5.12.0",
     "npm-install": "npm install"
   },
   "postCreateCommand": {
