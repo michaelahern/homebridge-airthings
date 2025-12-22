@@ -114,7 +114,7 @@ export class AirthingsPlatform implements DynamicPlatformPlugin {
             config.co2DetectedThreshold = 1000;
         }
 
-        if (config.radonLeakThreshold != undefined && !Number.isSafeInteger(config.radonLeakThreshold)) {
+        if (config.radonLeakThreshold !== undefined && !Number.isSafeInteger(config.radonLeakThreshold)) {
             this.log.warn('Invalid config value: radonLeakThreshold (not a valid integer)');
             config.radonLeakThreshold = undefined;
         }
@@ -321,7 +321,7 @@ class AirthingsAccessory {
             }
         }
 
-        if (this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold != undefined) {
+        if (this.airthingsDevice.sensors.radonShortTermAvg && this.airthingsConfig.radonLeakThreshold !== undefined) {
             this.radonService = this.accessory.getService(Service.LeakSensor)
                 ?? this.accessory.addService(Service.LeakSensor, 'Radon');
         }
@@ -345,7 +345,7 @@ class AirthingsAccessory {
     }
 
     private async getLatestSensorResult() {
-        if (this.airthingsConfig.serialNumber == undefined) {
+        if (this.airthingsConfig.serialNumber === undefined) {
             return;
         }
 
@@ -422,7 +422,7 @@ class AirthingsAccessory {
         }
 
         this.airQualityService.getCharacteristic(this.platform.Characteristic.StatusActive).updateValue(
-            lastSensorResultRecordedAt != undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
+            lastSensorResultRecordedAt !== undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
         );
 
         if (this.temperatureService) {
@@ -432,7 +432,7 @@ class AirthingsAccessory {
             }
             else {
                 this.temperatureService.getCharacteristic(this.platform.Characteristic.StatusActive).updateValue(
-                    lastSensorResultRecordedAt != undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
+                    lastSensorResultRecordedAt !== undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
                 );
             }
         }
@@ -444,7 +444,7 @@ class AirthingsAccessory {
             }
             else {
                 this.humidityService.getCharacteristic(this.platform.Characteristic.StatusActive).updateValue(
-                    lastSensorResultRecordedAt != undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
+                    lastSensorResultRecordedAt !== undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
                 );
             }
         }
@@ -461,7 +461,7 @@ class AirthingsAccessory {
             }
             else {
                 this.carbonDioxideService.getCharacteristic(this.platform.Characteristic.StatusActive).updateValue(
-                    lastSensorResultRecordedAt != undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
+                    lastSensorResultRecordedAt !== undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
                 );
             }
         }
@@ -473,7 +473,7 @@ class AirthingsAccessory {
             }
             else {
                 this.airPressureService.getCharacteristic(this.platform.Characteristic.StatusActive).updateValue(
-                    lastSensorResultRecordedAt != undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
+                    lastSensorResultRecordedAt !== undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
                 );
             }
         }
@@ -489,7 +489,7 @@ class AirthingsAccessory {
             }
             else {
                 this.radonService.getCharacteristic(this.platform.Characteristic.StatusActive).updateValue(
-                    lastSensorResultRecordedAt != undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
+                    lastSensorResultRecordedAt !== undefined && Date.now() - lastSensorResultRecordedAt < 2 * 60 * 60 * 1000
                 );
             }
         }
