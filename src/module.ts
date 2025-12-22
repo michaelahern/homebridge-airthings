@@ -1,7 +1,10 @@
 import { API } from 'homebridge';
 
-import { AirthingsPlugin } from './plugin.js';
+import { AirthingsPlatform } from './plugin.js';
+
+const PLUGIN_NAME = 'homebridge-airthings';
+const PLATFORM_NAME = 'Airthings';
 
 export default (api: API) => {
-    api.registerAccessory('Airthings', AirthingsPlugin);
+    api.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, AirthingsPlatform);
 };
