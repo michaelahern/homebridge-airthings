@@ -17,4 +17,11 @@ jobs:
           node-version: 24.x
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm publish
+      - run: |
+          if [[ "$GITHUB_REF_NAME" == "alpha" ]]; then
+            npm publish --tag alpha
+          elif [[ "$GITHUB_REF_NAME" == "beta" ]]; then
+            npm publish --tag beta
+          else
+            npm publish
+          fi
