@@ -18,10 +18,10 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: |
-          if [[ "$GITHUB_REF_NAME" == "alpha" ]]; then
-            npm publish --tag alpha
-          elif [[ "$GITHUB_REF_NAME" == "beta" ]]; then
-            npm publish --tag beta
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" == *-* ]]; then
+            TAG=$(echo "$VERSION" | sed -E 's/^[0-9]+\.[0-9]+\.[0-9]+-([a-zA-Z0-9]+).*/\1/')
+            npm publish --tag "$TAG"
           else
             npm publish
           fi
