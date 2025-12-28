@@ -19,7 +19,8 @@
       "clientSecret": {
         "title": "Client Secret",
         "type": "string",
-        "required": true
+        "required": true,
+        "format": "password"
       },
       "serialNumber": {
         "title": "Serial Number",
