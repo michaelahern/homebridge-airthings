@@ -30,38 +30,52 @@ Note: Airthings Wave devices require an Airthings SmartLink Hub ([View Plus](htt
 
 ## Configuration
 
-Example accessory config in the Homebridge config.json:
+Example platform config in the Homebridge config.json:
 
 ```json
-"accessories": [
+"platforms": [
   {
-    "accessory": "Airthings",
-    "name": "Living Room Airthings View Plus",
+    "platform": "Airthings",
     "clientId": "00000000-0000-0000-0000-000000000000",
     "clientSecret": "11111111-1111-1111-1111-111111111111",
-    "serialNumber": "2960123456",
-    "batteryDisabled": false,
-    "co2AirQualityDisabled": false,
-    "humidityAirQualityDisabled": false,
-    "pm25AirQualityDisabled": false,
-    "radonAirQualityDisabled": false,
-    "vocAirQualityDisabled": false,
-    "co2DetectedThreshold": 1000,
-    "radonLeakThreshold": 100,
+    "refreshInterval": 150,
     "debug": false,
-    "refreshInterval": 150
+    "devices": [
+      {
+        "name": "Living Room Airthings View Plus",
+        "serialNumber": "2960123456",
+        "batteryDisabled": false,
+        "co2AirQualityDisabled": false,
+        "humidityAirQualityDisabled": false,
+        "pm25AirQualityDisabled": false,
+        "radonAirQualityDisabled": false,
+        "vocAirQualityDisabled": false,
+        "co2DetectedThreshold": 1000,
+        "radonLeakThreshold": 100,
+        "refreshInterval": 150
+      }
+    ]
   }
 ]
 ```
 
 ### Configuration Details
 
+**Platform Settings**
+
 Field                          | Description
 -------------------------------|------------
-**accessory**                  | (required) Must be "Airthings"
-**name**                       | (required) Name for the device in HomeKit
+**platform**                   | (required) Must be "Airthings"
 **clientId**                   | (required) Client ID generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
 **clientSecret**               | (required) Client Secret generated in the [Airthings Dashboard](https://consumer-api-doc.airthings.com/dashboard)
+**refreshInterval**            | (optional) Default interval in seconds for refreshing sensor data for all devices, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
+**debug**                      | (optional) Enable debug logging for all devices, disabled by default
+
+**Device Settings (per item in `devices`)**
+
+Field                          | Description
+-------------------------------|------------
+**name**                       | (required) Name for the device in HomeKit
 **serialNumber**               | (required) Serial number of the device
 **co2AirQualityDisabled**      | (optional) Disable Carbon Dioxide (CO₂) in Air Quality sensor calculation, default is false
 **humidityAirQualityDisabled** | (optional) Disable Humidity in Air Quality sensor calculation. default is false
@@ -70,9 +84,8 @@ Field                          | Description
 **vocAirQualityDisabled**      | (optional) Disable VOC in Air Quality sensor calculation, default is false
 **co2DetectedThreshold**       | (optional) Configure a custom Carbon Dioxide (CO₂) detected threshold, default is 1000 ppm
 **radonLeakThreshold**         | (optional) Enable a Radon Leak Sensor with a threshold in Bq/m³, see additional notes below, disabled by default
-**debug**                      | (optional) Enable debug logging, disabled by default
 **batteryDisabled**            | (optional) Disable Battery Service, default is false
-**refreshInterval**            | (optional) Interval in seconds for refreshing sensor data, default is 150s<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
+**refreshInterval**            | (optional) Interval in seconds for refreshing sensor data for this device, default is 150s (or platform default)<br/>_Note: The Airthings Consumer API has a [rate limit of 120 requests per hour](https://consumer-api-doc.airthings.com/docs/api/rate-limit)_
 
 ### How to request an Airthings API Client ID & Secret
 
