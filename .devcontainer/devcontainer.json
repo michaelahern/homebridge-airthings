@@ -1,5 +1,5 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -10,7 +10,7 @@
     }
   },
   "updateContentCommand": {
-    "homebridge-install": "npm install -g homebridge@1.11.1 homebridge-config-ui-x@5.12.0",
+    "homebridge-install": "npm install -g homebridge@1.11.3 homebridge-config-ui-x@5.20.0",
     "npm-install": "npm install"
   },
   "postCreateCommand": {
