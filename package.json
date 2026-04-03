@@ -47,7 +47,7 @@
     "@eslint/json": "^1",
     "@eslint/markdown": "^8",
     "@stylistic/eslint-plugin": "^5",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "eslint": "^10",
     "eslint-plugin-jsonc": "^3",
     "eslint-plugin-yml": "^3",
@@ -58,6 +58,6 @@
   },
   "engines": {
     "homebridge": ">=1.8.5 || >=2.0.0",
-    "node": ">=20"
+    "node": ">=22"
   }
 }
