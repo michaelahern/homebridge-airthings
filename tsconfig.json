@@ -3,8 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "node20",
-    "target": "es2023",
+    "module": "nodenext",
     "types": [
       "node"
     ],
@@ -13,10 +12,8 @@
     "declarationMap": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-    "strict": true,
     "verbatimModuleSyntax": false,
     "isolatedModules": false,
-    "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
   },
