@@ -18,6 +18,8 @@ A [Homebridge](https://homebridge.io) plugin for [Airthings](https://www.airthin
 
 | Airthings Device                                                     | Serial Number |
 | -------------------------------------------------------------------- | ------------- |
+| [Airthings Corentium Home 2](https://www.airthings.com/corentium-home-2) | 3250xxxxxx    |
+| [Airthings Renew](https://www.airthings.com/renew)                   | 4100xxxxxx    |
 | [Airthings View Plus](https://www.airthings.com/view-plus)           | 2960xxxxxx    |
 | [Airthings View Radon](https://www.airthings.com/view-radon)         | 2989xxxxxx    |
 | [Airthings Wave Enhance](https://www.airthings.com/wave-enhance)     | 3210xxxxxx    |
