@@ -4,6 +4,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'Wave',
                 sensors: {
+                    battery: true,
                     co2: false,
                     humidity: true,
                     mold: false,
@@ -19,6 +20,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'Wave Mini',
                 sensors: {
+                    battery: true,
                     co2: false,
                     humidity: true,
                     mold: true,
@@ -34,6 +36,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'Wave Plus',
                 sensors: {
+                    battery: true,
                     co2: true,
                     humidity: true,
                     mold: false,
@@ -49,6 +52,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'Wave Radon',
                 sensors: {
+                    battery: true,
                     co2: false,
                     humidity: true,
                     mold: false,
@@ -64,6 +68,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'View Plus',
                 sensors: {
+                    battery: true,
                     co2: true,
                     humidity: true,
                     mold: false,
@@ -79,6 +84,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'View Pollution',
                 sensors: {
+                    battery: true,
                     co2: false,
                     humidity: true,
                     mold: false,
@@ -94,6 +100,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'View Radon',
                 sensors: {
+                    battery: true,
                     co2: false,
                     humidity: true,
                     mold: false,
@@ -110,6 +117,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
             return {
                 model: 'Wave Enhance',
                 sensors: {
+                    battery: true,
                     co2: true,
                     humidity: true,
                     mold: false,
@@ -121,10 +129,43 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
                     voc: true
                 }
             } as AirthingsDeviceInfo;
+        case '3250':
+            return {
+                model: 'Corentium Home 2',
+                sensors: {
+                    battery: true,
+                    co2: false,
+                    humidity: true,
+                    mold: false,
+                    pm1: false,
+                    pm25: false,
+                    pressure: false,
+                    radonShortTermAvg: true,
+                    temp: true,
+                    voc: false
+                }
+            } as AirthingsDeviceInfo;
+        case '4100':
+            return {
+                model: 'Renew',
+                sensors: {
+                    battery: false,
+                    co2: false,
+                    humidity: false,
+                    mold: false,
+                    pm1: false,
+                    pm25: true,
+                    pressure: false,
+                    radonShortTermAvg: false,
+                    temp: false,
+                    voc: false
+                }
+            } as AirthingsDeviceInfo;
         default:
             return {
                 model: 'Unknown',
                 sensors: {
+                    battery: false,
                     co2: false,
                     humidity: false,
                     mold: false,
@@ -142,6 +183,7 @@ export function getAirthingsDeviceInfoBySerialNumber(serialNumber: string) {
 export interface AirthingsDeviceInfo {
     model: string;
     sensors: {
+        battery: boolean;
         co2: boolean;
         humidity: boolean;
         mold: boolean;

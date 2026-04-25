@@ -183,7 +183,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
     getServices(): Service[] {
         const services = [this.informationService, this.airQualityService];
 
-        if (!this.airthingsConfig.batteryDisabled) {
+        if (this.airthingsDevice.sensors.battery && !this.airthingsConfig.batteryDisabled) {
             services.push(this.batteryService);
         }
 

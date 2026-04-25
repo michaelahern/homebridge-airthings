@@ -16,15 +16,17 @@ A [Homebridge](https://homebridge.io) plugin for [Airthings](https://www.airthin
 
 ### Supported Devices
 
-| Airthings Device                                                     | Serial Number |
-| -------------------------------------------------------------------- | ------------- |
-| [Airthings View Plus](https://www.airthings.com/view-plus)           | 2960xxxxxx    |
-| [Airthings View Radon](https://www.airthings.com/view-radon)         | 2989xxxxxx    |
-| [Airthings Wave Enhance](https://www.airthings.com/wave-enhance)     | 3210xxxxxx    |
-| [Airthings Wave Enhance](https://www.airthings.com/wave-enhance)     | 3220xxxxxx    |
-| [Airthings Wave Plus](https://www.airthings.com/wave-plus)           | 2930xxxxxx    |
-| [Airthings Wave Radon](https://www.airthings.com/wave-radon)         | 2950xxxxxx    |
-| [Airthings Wave Mini](https://www.airthings.com/wave-mini)           | 2920xxxxxx    |
+| Airthings Device                                                         | Serial Number |
+| ------------------------------------------------------------------------ | ------------- |
+| [Airthings Corentium Home 2](https://www.airthings.com/corentium-home-2) | 3250xxxxxx    |
+| [Airthings Renew](https://www.airthings.com/renew)                       | 4100xxxxxx    |
+| [Airthings View Plus](https://www.airthings.com/view-plus)               | 2960xxxxxx    |
+| [Airthings View Radon](https://www.airthings.com/view-radon)             | 2989xxxxxx    |
+| [Airthings Wave Enhance](https://www.airthings.com/wave-enhance)         | 3210xxxxxx    |
+| [Airthings Wave Enhance](https://www.airthings.com/wave-enhance)         | 3220xxxxxx    |
+| [Airthings Wave Plus](https://www.airthings.com/wave-plus)               | 2930xxxxxx    |
+| [Airthings Wave Radon](https://www.airthings.com/wave-radon)             | 2950xxxxxx    |
+| [Airthings Wave Mini](https://www.airthings.com/wave-mini)               | 2920xxxxxx    |
 
 Note: Airthings Wave devices require an Airthings SmartLink Hub ([View Plus](https://www.airthings.com/view-plus), [View Radon](https://www.airthings.com/view-radon)) to continuously push measurement data to the Airthings Cloud.
 
