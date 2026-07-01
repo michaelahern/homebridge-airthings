@@ -44,14 +44,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^10",
-    "@eslint/json": "^1",
+    "@eslint/json": "^2",
     "@eslint/markdown": "^8",
     "@stylistic/eslint-plugin": "^5",
     "@types/node": "^22",
     "eslint": "^10",
     "eslint-plugin-jsonc": "^3",
     "eslint-plugin-yml": "^3",
-    "homebridge": "~1.11",
+    "homebridge": "~2.1",
     "rimraf": "^6",
     "typescript": "~6.0",
     "typescript-eslint": "^8"
