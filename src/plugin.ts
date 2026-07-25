@@ -102,10 +102,10 @@ export class AirthingsPlugin implements AccessoryPlugin {
             .setCharacteristic(api.hap.Characteristic.FirmwareRevision, 'Unknown');
 
         // HomeKit Battery Service
-        this.batteryService = new api.hap.Service.Battery('Battery');
+        this.batteryService = new api.hap.Service.Battery(`${config.name} Battery`);
 
         // HomeKit Air Quality Service
-        this.airQualityService = new api.hap.Service.AirQualitySensor('Air Quality');
+        this.airQualityService = new api.hap.Service.AirQualitySensor(`${config.name} Air Quality`);
 
         if (this.airthingsDevice.sensors.co2 && !this.airthingsConfig.co2AirQualityDisabled) {
             this.airQualityService.getCharacteristic(api.hap.Characteristic.CarbonDioxideLevel).setProps({});
@@ -149,16 +149,16 @@ export class AirthingsPlugin implements AccessoryPlugin {
         }
 
         // HomeKit Temperature Service
-        this.temperatureService = new api.hap.Service.TemperatureSensor('Temp');
+        this.temperatureService = new api.hap.Service.TemperatureSensor(`${config.name} Temp`);
 
         // HomeKit Humidity Service
-        this.humidityService = new api.hap.Service.HumiditySensor('Humidity');
+        this.humidityService = new api.hap.Service.HumiditySensor(`${config.name} Humidity`);
 
         // HomeKit CO2 Service
-        this.carbonDioxideService = new api.hap.Service.CarbonDioxideSensor('CO2');
+        this.carbonDioxideService = new api.hap.Service.CarbonDioxideSensor(`${config.name} CO2`);
 
         // Eve Air Pressure Service
-        this.airPressureService = new api.hap.Service('Air Pressure', 'e863f00a-079e-48ff-8f27-9c2605a29f52');
+        this.airPressureService = new api.hap.Service(`${config.name} Air Pressure`, 'e863f00a-079e-48ff-8f27-9c2605a29f52');
 
         this.airPressureService.addCharacteristic(new api.hap.Characteristic('Air Pressure', 'e863f10f-079e-48ff-8f27-9c2605a29f52', {
             format: Formats.UINT16,
@@ -172,7 +172,7 @@ export class AirthingsPlugin implements AccessoryPlugin {
         this.airPressureService.addCharacteristic(api.hap.Characteristic.StatusActive);
 
         // HomeKit Radon (Leak) Service
-        this.radonService = new api.hap.Service.LeakSensor('Radon');
+        this.radonService = new api.hap.Service.LeakSensor(`${config.name} Radon`);
 
         this.refreshCharacteristics(api);
         setInterval(async () => {
